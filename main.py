@@ -61,10 +61,23 @@ async def fortune(ctx):
 
 @bot.command(name='薯條塔羅', aliases=['貓貓塔羅', '喵喵塔羅'])
 async def tarot(ctx, *args):
+    has_num = False
     try:
         n = int(args[0])
+        has_num = True
     except:
         n = 1
+
+    if len(args) > 1:
+        idx = 1 if has_num else 0
+        wish = ' '.join(args[idx:])
+        wish = wish.replace('我', '你')
+        wish = wish.replace('my', 'your')
+        wish = wish.replace('My', 'Your')
+        wish = wish.replace('MY', 'YOUR')
+        msg = '%s 讓本喵來占卜看看 %s ლ(́◕◞౪◟◕‵ლ)' % (btl.mk_mention(ctx), wish)
+        await ctx.send(msg)
+
     for msg, path in tm.get_many_tarot(int(n)):
         await ctx.send(msg, file=discord.File(path))
 
