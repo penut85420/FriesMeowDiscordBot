@@ -68,7 +68,7 @@ async def tarot(ctx, *args):
     except:
         n = 1
 
-    if len(args) > 1:
+    if len(args) > 0:
         idx = 1 if has_num else 0
         wish = ' '.join(args[idx:])
         wish = wish.replace('我', '你')
