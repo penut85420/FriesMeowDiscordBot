@@ -15,6 +15,7 @@ class TwscCalendar:
         self.creds = self.get_creds()
 
     def get_creds(self):
+        creds = None
         if os.path.exists('token.pickle'):
             with open('token.pickle', 'rb') as token:
                 creds = pickle.load(token)
