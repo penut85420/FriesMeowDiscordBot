@@ -4,7 +4,7 @@ import sys
 
 while True:
     try:
-        sp.call(['py', 'main.py'])
+        sp.call(['python3', 'main.py'])
         code = int(open('tmp', 'r', encoding='UTF-8').read())
         if code:
             print('Bot is shutdown')
