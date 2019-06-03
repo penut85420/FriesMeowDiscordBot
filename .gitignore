@@ -1,0 +1,14 @@
+env_dcbot/
+tarot/
+data/
+.vscode/
+__pycache__/
+test/
+
+dev_id
+google_api
+tmp
+token
+credentials.json
+*.log
+*.pickle
