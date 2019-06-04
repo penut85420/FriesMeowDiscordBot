@@ -8,19 +8,28 @@ from discord.ext import commands
 import bot_util as btl
 from dice import Dice
 from fortune import FortuneMeow
-from template import ResponseTemplate
-from twsc import TwscCalendar
-from tarot import TarotMeow
 from fries_summon import FriesSummoner
 from sc_mutation import SC2Mutation
+from tarot import TarotMeow
+from template import ResponseTemplate
+from twsc import TwscCalendar
+
+class FriesBot(commands.Bot):
+    def __init__(self, **kwargs):
+        self.msg_log = logging.getLogger('fries.meow.friesbot')
+        commands.Bot.__init__(self, **kwargs)
+
+    async def on_message(self, msg):
+        if msg.author != self.user:
+            self.msg_log.info('Message from {0.author}: {0.content}'.format(msg))
+        await commands.Bot.on_message(self, msg)
 
 bu = btl.BotUtils()
 token = bu.get_token()
 activity = discord.Activity(name='帥氣的威廷', type=discord.ActivityType.watching)
-bot = commands.Bot(command_prefix='!', help_command=None, activity=activity)
+bot = FriesBot(command_prefix='!', help_command=None, activity=activity)
 
 # Modules
-
 tc = TwscCalendar()
 rt = ResponseTemplate()
 fm = FortuneMeow()
@@ -28,11 +37,15 @@ tm = TarotMeow()
 fs = FriesSummoner()
 sm = SC2Mutation()
 
+# Shortcut Functions
+def log(msg):
+    bot.msg_log.info(msg)
+
 # Events
 
 @bot.event
 async def on_ready():
-    print("Logged in as %s" % bot.user)
+    log('Logged in as %s' % bot.user)
 
 # Feature Commands
 ## Basic Commands

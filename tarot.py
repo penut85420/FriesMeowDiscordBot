@@ -1,5 +1,6 @@
 import random
 import bot_util as btl
+import logging
 
 KEY_REVERSED = ['positive', 'reversed']
 STR_REVERSED = ['正位', '逆位']
@@ -17,6 +18,7 @@ SIMPLE_ORDER = ['related', 'meaning']
 class TarotMeow:
     def __init__(self):
         self.tarot = btl.load_json('./data/tarot_cht.json')
+        self.logger = logging.getLogger('fries.meow.tarot')
 
     def get_tarot(self):
         i, r = self._get_tarot_info()
@@ -48,6 +50,7 @@ class TarotMeow:
         card = tarot[KEY_REVERSED[r]]
         msg = '**%s%s**\n\n' % (STR_REVERSED[r], tarot['name'])
         msg += self._parse_result_detail(card)
+        self.logger.info('Response %s%s' % (STR_REVERSED[r], tarot['name']))
         return msg
     
     def _parse_result_detail(self, r):
