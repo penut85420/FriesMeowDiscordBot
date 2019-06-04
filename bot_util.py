@@ -1,5 +1,6 @@
 import os
 import json
+import pickle as pk
 
 def get_token():
     token_path = 'token_test' if os.path.exists('./debug') else 'token'
@@ -10,6 +11,9 @@ def mk_mention(ctx):
 
 def load_json(file_path):
     return json.load(open(file_path, 'r', encoding='UTF-8'))
+
+def load_pkl(file_path):
+    return pk.load(open(file_path, 'rb'))
 
 def walk_dir(dir_path):
     for dirPath, _, fileList in os.walk(dir_path):

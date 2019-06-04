@@ -12,7 +12,7 @@ from template import ResponseTemplate
 from twsc import TwscCalendar
 from tarot import TarotMeow
 from fries_summon import FriesSummoner
-
+from sc_mutation import SC2Mutation
 
 token = btl.get_token()
 activity = discord.Activity(name='帥氣的威廷', type=discord.ActivityType.watching)
@@ -26,6 +26,7 @@ bu = btl.BotUtils()
 fm = FortuneMeow()
 tm = TarotMeow()
 fs = FriesSummoner()
+sm = SC2Mutation()
 
 # Events
 
@@ -99,6 +100,11 @@ async def summon(ctx, n=1):
     
     for pic in fs.get_pictures(n):
         await ctx.send(file=discord.File(pic))
+
+@bot.command(name='本週異變', aliases=['本周異變', '異變', 'mutation'])
+async def mutation(ctx, n=1):
+    msg = sm.get_recent_stage()
+    await ctx.send(msg)
 
 # Dev Commands
 
