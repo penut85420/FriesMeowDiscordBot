@@ -9,6 +9,8 @@ SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 TWSC_CALENDAR = '59o7f5ng87g2ilq635r5r78o04@group.calendar.google.com'
 WEEK_DELTA = datetime.timedelta(days=7)
 WEEK_STR = "一二三四五六日"
+CRED_PATH = './config/credentials.json'
+TOKEN_PATH = './config/token.pickle'
 
 class TwscCalendar:
     def __init__(self):
@@ -16,8 +18,8 @@ class TwscCalendar:
 
     def get_creds(self):
         creds = None
-        if os.path.exists('token.pickle'):
-            with open('token.pickle', 'rb') as token:
+        if os.path.exists(TOKEN_PATH):
+            with open(TOKEN_PATH, 'rb') as token:
                 creds = pickle.load(token)
 
         if not creds or not creds.valid:
@@ -25,9 +27,9 @@ class TwscCalendar:
                 creds.refresh(Request())
             else:
                 flow = InstalledAppFlow.from_client_secrets_file(
-                    'credentials.json', SCOPES)
+                    CRED_PATH, SCOPES)
                 creds = flow.run_local_server()
-            with open('token.pickle', 'wb') as token:
+            with open(TOKEN_PATH, 'wb') as token:
                 pickle.dump(creds, token)
         
         return creds

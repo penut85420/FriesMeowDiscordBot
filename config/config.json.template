@@ -1,0 +1,11 @@
+{
+    "is_debug": "If debug, then token_test will be use.",
+    "dev_id": [
+        "Allowed id list to use dev commands."
+    ],
+    "google_api": "Google api token.",
+    "run": "Run python command, such as python3, py.",
+    "token": "Token for formal discord bot.",
+    "token_test": "This token will be use if debug is true."
+}
+

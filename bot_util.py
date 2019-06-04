@@ -2,9 +2,11 @@ import os
 import json
 import pickle as pk
 
-def get_token():
-    token_path = 'token_test' if os.path.exists('./debug') else 'token'
-    return open(token_path, 'r').read()
+TMP_PATH = './config/tmp'
+CONFIG_PATH = './config/config.json'
+
+def load_config():
+    return load_json(CONFIG_PATH)
 
 def mk_mention(ctx):
     return '<@%s>' % ctx.author.id
@@ -27,13 +29,15 @@ def cast_int(args):
     except:
         return 1, 0
 
+def write_file(file_path, contents):
+    with open(file_path, 'w', encoding='UTF-8') as fout:
+        fout.write(contents)
+
 def restart_bot():
-    with open('tmp', 'w', encoding='UTF-8') as fout:
-        fout.write('0')
+    write_file(TMP_PATH, '0')
 
 def shutdown_bot():
-    with open('tmp', 'w', encoding='UTF-8') as fout:
-        fout.write('1')
+    write_file(TMP_PATH, '1')
 
 def exchange_name(msg):
     exchange_list = [
@@ -56,13 +60,19 @@ def exchange_name(msg):
 
 class BotUtils:
     def __init__(self):
+        self.config = load_config()
+        self.config['is_debug'] = self.config['is_debug'] == "True"
         self.dev_id_dict = dict()
-        for dev_id in [int(line) for line in open('./dev_id', 'r')]:
+        for dev_id in [int(line) for line in self.config['dev_id']]:
             self.dev_id_dict[dev_id] = True
     
     def is_dev(self, ctx):
         user_id = ctx.author.id
         return self.dev_id_dict.get(user_id, False)
     
+    def get_token(self):
+        token_key = 'token_test' if self.config['is_debug'] else 'token'
+        return self.config[token_key]
+
     async def not_dev_msg(self, ctx):
         await ctx.send('%s 你不是開發人員，不能用這個指令 (((ﾟдﾟ)))' % ctx.author.name)

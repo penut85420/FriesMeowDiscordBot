@@ -14,7 +14,8 @@ from tarot import TarotMeow
 from fries_summon import FriesSummoner
 from sc_mutation import SC2Mutation
 
-token = btl.get_token()
+bu = btl.BotUtils()
+token = bu.get_token()
 activity = discord.Activity(name='帥氣的威廷', type=discord.ActivityType.watching)
 bot = commands.Bot(command_prefix='!', help_command=None, activity=activity)
 
@@ -22,7 +23,6 @@ bot = commands.Bot(command_prefix='!', help_command=None, activity=activity)
 
 tc = TwscCalendar()
 rt = ResponseTemplate()
-bu = btl.BotUtils()
 fm = FortuneMeow()
 tm = TarotMeow()
 fs = FriesSummoner()
@@ -33,7 +33,6 @@ sm = SC2Mutation()
 @bot.event
 async def on_ready():
     print("Logged in as %s" % bot.user)
-
 
 # Feature Commands
 ## Basic Commands

@@ -6,13 +6,6 @@ __pycache__/
 test/
 fries_pictures/
 
-debug
-run
-token_test
-dev_id
-google_api
-tmp
-token
-credentials.json
 *.log
 *.pickle
+*.json
