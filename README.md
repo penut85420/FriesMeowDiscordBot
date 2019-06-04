@@ -2,7 +2,7 @@
 
 薯條喵喵喵降臨在 Discord 上啦！  
 歡迎加入 [Discord 群組](https://discord.gg/HyQEypc)  
-或者[邀請薯條喵喵喵 >ω<](https://tinyurl.com/FriesMeow)加入你的 Discord 群組
+或者[邀請薯條喵喵喵 >ω< 加入](https://tinyurl.com/FriesMeow)你的 Discord 群組
 
 ## 使用簡介
 + 指令以 `!` 開頭
@@ -42,3 +42,8 @@
 ### 異變戰場
 + 輸入 `!本週異變` 可以得到本週星海異變戰場的資訊
 + 輸入 `!下週異變` 可以得到下週星海異變戰場的資訊
+
+## 參考資料
++ [樂樂小棧](http://mst168.idv.tw/tarot/TAROS/index.asp)
++ [淺草籤](https://gist.github.com/mmis1000/d94bb0a9f37cfd362453)
++ [TWSC 星海行事曆](http://bit.ly/TWSCSC2CAL)
