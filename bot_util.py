@@ -21,6 +21,20 @@ def walk_dir(dir_path):
             fullPath = os.path.join(dirPath, fileName)
             yield fullPath, fileName
 
+def cast_int(args):
+    try:
+        return int(args[0]), 1
+    except:
+        return 1, 0
+
+def restart_bot():
+    with open('tmp', 'w', encoding='UTF-8') as fout:
+        fout.write('0')
+
+def shutdown_bot():
+    with open('tmp', 'w', encoding='UTF-8') as fout:
+        fout.write('1')
+
 def exchange_name(msg):
     exchange_list = [
         ('我', '!@#$1$#@!'),

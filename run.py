@@ -11,7 +11,7 @@ while True:
         if code:
             print('Bot is shutdown')
             break
-        print('Bot restart after 1 seconds')
-        time.sleep(1)
+        print('Bot restart...')
+        # time.sleep(1)
     except KeyboardInterrupt:
         exit(0)

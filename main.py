@@ -34,14 +34,13 @@ sm = SC2Mutation()
 async def on_ready():
     print("Logged in as %s" % bot.user)
 
-# Help
 
-@bot.command()
+# Feature Commands
+## Basic Commands
+@bot.command(name='help', aliases=['喵'])
 async def help(ctx):
     msg = rt.get_response('help')
     await ctx.send(msg)
-
-# Feature Commands
 
 @bot.command(aliases=['哈囉'])
 async def hello(ctx):
@@ -51,44 +50,7 @@ async def hello(ctx):
         msg = rt.get_response('hello', ctx.author.name)
     await ctx.send(msg)
 
-@bot.command(name='sc', aliases=['星海比賽', '星海賽事'])
-async def fight(ctx):
-    msg = rt.get_response('twsc', tc.get_recent_events())
-    await ctx.send(msg)
-
-@bot.command()
-async def dice(ctx, dice='', name=None):
-    msg = '%s %s' % (btl.mk_mention(ctx), Dice.roller(dice, name))
-    await ctx.send(msg)
-
-@bot.command(name='薯條籤筒', aliases=['貓貓籤筒', '喵喵籤筒'])
-async def fortune(ctx):
-    msg = rt.get_response('fortune', btl.mk_mention(ctx), fm.get_fortune())
-    await ctx.send(msg)
-
-@bot.command(name='薯條塔羅', aliases=['貓貓塔羅', '喵喵塔羅'])
-async def tarot(ctx, *args):
-    args = list(args)
-    try:
-        n = int(args[0])
-        has_num = True
-    except:
-        n = 1
-        has_num = False
-
-    is_detail = True if 'detail' in args else False
-    if is_detail: args.remove('detail')
-
-    if len(args) > 0:
-        idx = 1 if has_num else 0
-        wish = ' '.join(args[idx:])
-        wish = btl.exchange_name(wish)
-        msg = '%s 讓本喵來占卜看看 %s ლ(́◕◞౪◟◕‵ლ)' % (btl.mk_mention(ctx), wish)
-        await ctx.send(msg)
-
-    for msg, path in tm.get_many_tarot(int(n)):
-        await ctx.send(msg, file=discord.File(path))
-
+## Meow Meow Commands
 @bot.command(name='召喚薯條', aliases=['召喚貓貓', '召喚喵喵'])
 async def summon(ctx, n=1):
     n = int(n)
@@ -101,6 +63,12 @@ async def summon(ctx, n=1):
     for pic in fs.get_pictures(n):
         await ctx.send(file=discord.File(pic))
 
+## StarCraft II Commands
+@bot.command(name='sc', aliases=['星海比賽', '星海賽事'])
+async def fight(ctx):
+    msg = rt.get_response('twsc', tc.get_recent_events())
+    await ctx.send(msg)
+
 @bot.command(name='本週異變', aliases=['本周異變', '異變', 'mutation'])
 async def mutation(ctx):
     msg = sm.get_recent_stage()
@@ -111,20 +79,50 @@ async def mutation_next_week(ctx):
     msg = sm.get_next_week_stage()
     await ctx.send(msg)
 
+## TRPG Commands
+@bot.command()
+async def dice(ctx, dice='', name=None):
+    msg = '%s %s' % (btl.mk_mention(ctx), Dice.roller(dice, name))
+    await ctx.send(msg)
+
+## Divination Commands
+@bot.command(name='薯條籤筒', aliases=['貓貓籤筒', '喵喵籤筒'])
+async def fortune(ctx):
+    msg = rt.get_response('fortune', btl.mk_mention(ctx), fm.get_fortune())
+    await ctx.send(msg)
+
+@bot.command(name='薯條塔羅', aliases=['貓貓塔羅', '喵喵塔羅'])
+async def tarot(ctx, *args):
+    n, has_num = btl.cast_int(args)
+    
+    if len(args) > has_num:
+        wish = ' '.join(args[has_num:])
+        wish = btl.exchange_name(wish)
+        msg = '%s 讓本喵來占卜看看 %s ლ(́◕◞౪◟◕‵ლ)' % (btl.mk_mention(ctx), wish)
+    else:
+        msg = '%s 讓本喵來幫你抽個 ლ(́◕◞౪◟◕‵ლ)' % (btl.mk_mention(ctx))
+    await ctx.send(msg)
+
+    for msg, path in tm.get_many_tarot(n):
+        await ctx.send(msg, file=discord.File(path))
+
 # Dev Commands
 
-@bot.command()
-async def reset(ctx):
+@bot.command(aliases=['r'])
+async def restart(ctx):
+    if not bu.is_dev(ctx):
+        await bu.not_dev_msg(ctx)
+        return
+    btl.restart_bot()
     await ctx.send('Wait...')
     await bot.close()
 
 @bot.command()
-async def bye(ctx, code=0):
+async def bye(ctx):
     if not bu.is_dev(ctx):
         await bu.not_dev_msg(ctx)
         return
-    with open('tmp', 'w', encoding='UTF-8') as fout:
-        fout.write(str(code))
+    btl.shutdown_bot()
     await ctx.send('Bye!')
     await bot.close()
 
