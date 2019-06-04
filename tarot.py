@@ -11,7 +11,8 @@ STR_COLUMN = {
     "sexuality": "兩性關係",
 }
 
-ORDER = ['related', 'behavior', 'meaning', 'sexuality', 'marriage']
+DETAIL_ORDER = ['related', 'behavior', 'meaning', 'sexuality', 'marriage']
+SIMPLE_ORDER = ['related', 'meaning']
 
 class TarotMeow:
     def __init__(self):
@@ -46,12 +47,12 @@ class TarotMeow:
         tarot = self.tarot['%02d' % i]
         card = tarot[KEY_REVERSED[r]]
         msg = '**%s%s**\n\n' % (STR_REVERSED[r], tarot['name'])
-        msg += self._parse_result(card)
+        msg += self._parse_result_detail(card)
         return msg
     
-    def _parse_result(self, r):
+    def _parse_result_detail(self, r):
         rtn = list()
-        for k in ORDER:
+        for k in DETAIL_ORDER:
             rtn.append('**%s**\n%s' % (STR_COLUMN[k], r[k]))
         return '\n\n'.join(rtn)
 

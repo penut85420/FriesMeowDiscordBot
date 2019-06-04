@@ -2,9 +2,11 @@ import time
 import subprocess as sp
 import sys
 
+run = open('./run', 'r').read()
+
 while True:
     try:
-        sp.call(['python3', 'main.py'])
+        sp.call([run, 'main.py'])
         code = int(open('tmp', 'r', encoding='UTF-8').read())
         if code:
             print('Bot is shutdown')
