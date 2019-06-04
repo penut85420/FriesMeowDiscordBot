@@ -20,29 +20,42 @@ class DiceRangeError(Exception):
 class Dice:
     MAX_BOUND = 1000
     MIN_BOUND = 1
-    DICE_PATTERN = re.compile('^([0-9]+)d([0-9]+)\\+?([0-9]*)$', re.I)
+    DICE_PATTERN = re.compile(r'^(\d+)d(\d+)(\+|\*)?(\d*)\=?(\d*)$', re.I)
+    METHODS = {
+        '+': lambda a, b: a + b,
+        '*': lambda a, b: a * b,
+    }
+    IS_SUCCESS = {
+        True: '...成功！',
+        False: '...失敗QQ'
+    }
 
     def __init__(self, dice, name=None):
         self.name = name
+        self.result = None
         self.roll(dice)
     
     def roll(self, dice):
-        a, b, c = self._parse(dice)
+        a, b, c, m, d = self._parse(dice)
         self._check_all_range(a, b, c)
         self.dseq = self._gen_dice_sequence(a, b)
-        if c: self.dseq.append(c)
-        self.total = sum(self.dseq) + c
+        self.total = sum(self.dseq)
+        if m: self.total = Dice.METHODS[m](self.total, c)
+        if d: self.result = self.total <= d
+        self.m = m
+        self.c = c
+        self.d = d
 
     def _parse(self, dice):
         try:
-            a, b, c = Dice.DICE_PATTERN.findall(dice)[0]
+            a, b, m, c, d = Dice.DICE_PATTERN.findall(dice)[0]
         except IndexError:
             raise DiceFormatError()
         a = int(a)
         b = int(b)
-        c = c or 0
-        c = int(c)
-        return a, b, c
+        c = int(c or 0)
+        d = int(d or 0)
+        return a, b, c, m, d
     
     def _check_range(self, num, n=0, max_bound=MAX_BOUND, min_bound=MIN_BOUND):
         if num < min_bound: raise DiceRangeError(n, min_bound, False)
@@ -57,17 +70,30 @@ class Dice:
 
     def _gen_dice_sequence(self, a, b):
         return [random.randint(1, b) for _ in range(a)]
+    
+    def _join_sequence(self):
+        return ' + '.join([str(d) for d in self.dseq])
 
+    def _gen_dice_step(self):
+        if self.m:
+            return '(%s) %s %d = %d' % (self._join_sequence(), self.m, self.c, self.total)
+        return '%s = %d' % (self._join_sequence(), self.total)
+    
     def __str__(self):
-        msg = str()
+        msg = list()
+        
         if self.name:
-            msg = '投擲 %s 的結果是 ' % self.name
+            msg.append('投擲 %s 的結果是 ' % self.name)
 
         if len(self.dseq) == 1:
-            msg += str(self.total)
+            msg.append(str(self.total))
         else:
-            msg += '%s = %d' % (' + '.join([str(d) for d in self.dseq]), self.total)
-        return msg
+            msg.append(self._gen_dice_step())
+        
+        if self.d:
+            msg.append(Dice.IS_SUCCESS[self.result])
+
+        return ''.join(msg)
     
     @staticmethod
     def roller(dice, name=None):
@@ -80,7 +106,7 @@ class DiceTest(unittest.TestCase, Dice):
     def test_roll(self):
         self.assertRegex(Dice.roller('1d99'), r'^\d+$')
         self.assertRegex(Dice.roller('3d99'), r'^\d+ \+ \d+ \+ \d+ = \d+$')
-        self.assertRegex(Dice.roller('3d99+66'), r'^\d+ \+ \d+ \+ \d+ \+ \d+ = [\d]+$')
+        self.assertRegex(Dice.roller('3d99+66'), r'^\(\d+ \+ \d+ \+ \d+\) \+ \d+ = [\d]+$')
         self.assertRegex(Dice.roller('1d99', 'Cool'), r'^投擲 Cool 的結果是 \d+$')
         self.assertRegex(Dice.roller('2d99', 'Cute'), r'^投擲 Cute 的結果是 \d+ \+ \d+ = \d+$')
         self.assertRegex(Dice.roller('3d100', 'Passion'), r'^投擲 Passion 的結果是 \d+ \+ \d+ \+ \d+ = \d+$')
@@ -90,9 +116,9 @@ class DiceTest(unittest.TestCase, Dice):
         self.assertEqual(Dice.roller('3dd6'), '格式必須是 NdM 或 NdM+K')
 
     def test_parse(self):
-        self.assertEqual(self._parse('3d6'), (3, 6, 0))
-        self.assertEqual(self._parse('3d6+9'), (3, 6, 9))
-        self.assertEqual(self._parse('99999d6+9'), (99999, 6, 9))
+        self.assertEqual(self._parse('3d6'), (3, 6, 0, '', 0))
+        self.assertEqual(self._parse('3d6+9'), (3, 6, 9, '+', 0))
+        self.assertEqual(self._parse('99999d6+9'), (99999, 6, 9, '+', 0))
         self.assertRaises(DiceFormatError, self._parse, dice='3d-6+9')
         self.assertRaises(DiceFormatError, self._parse, dice='3.3d6+9')
 
