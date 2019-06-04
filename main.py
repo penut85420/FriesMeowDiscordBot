@@ -106,6 +106,11 @@ async def mutation(ctx, n=1):
     msg = sm.get_recent_stage()
     await ctx.send(msg)
 
+@bot.command(name='下週異變', aliases=['下周異變', 'mutationnw'])
+async def mutation_next_week(ctx, n=1):
+    msg = sm.get_next_week_stage()
+    await ctx.send(msg)
+
 # Dev Commands
 
 @bot.command()
