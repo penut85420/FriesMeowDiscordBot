@@ -16,7 +16,7 @@ class SC2Mutation:
     def get_next_week_stage(self):
         date = dt.datetime.now() + self.next_week
         stage = self._get_stage_by_date(date)
-        return self._parse_stage_info(stage)
+        return self._parse_stage_info(stage, title='下週異變')
     
     def _get_stage_by_date(self, date):
         for stage in self.stages:
@@ -30,10 +30,12 @@ class SC2Mutation:
             rtn.append('  %s\n      %s' % (factor, self.factors[factor]))
         return '\n'.join(rtn)
 
-    def _parse_stage_info(self, stage):
+    def _parse_stage_info(self, stage, title='本週異變'):
         if not stage:
             return '我的奴僕還沒有更新異變資訊ヽ(#`Д´)ﾉ'
-        return self.template % (stage['stage_name'], stage['map_name'], self._parse_factors_info(stage['factors']))
+        return self.template % (
+            title, stage['stage_name'], stage['map_name'],
+            self._parse_factors_info(stage['factors']))
 
 if __name__ == '__main__':
     sm = SC2Mutation()
