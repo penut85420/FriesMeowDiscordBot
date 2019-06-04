@@ -51,7 +51,7 @@ async def hello(ctx):
         msg = rt.get_response('hello', ctx.author.name)
     await ctx.send(msg)
 
-@bot.command(name='sc', aliases=['星海比賽'])
+@bot.command(name='sc', aliases=['星海比賽', '星海賽事'])
 async def fight(ctx):
     msg = rt.get_response('twsc', tc.get_recent_events())
     await ctx.send(msg)
@@ -102,12 +102,12 @@ async def summon(ctx, n=1):
         await ctx.send(file=discord.File(pic))
 
 @bot.command(name='本週異變', aliases=['本周異變', '異變', 'mutation'])
-async def mutation(ctx, n=1):
+async def mutation(ctx):
     msg = sm.get_recent_stage()
     await ctx.send(msg)
 
 @bot.command(name='下週異變', aliases=['下周異變', 'mutationnw'])
-async def mutation_next_week(ctx, n=1):
+async def mutation_next_week(ctx):
     msg = sm.get_next_week_stage()
     await ctx.send(msg)
 
