@@ -7,6 +7,7 @@ from discord.ext import commands
 
 import bot_util as btl
 from dice import Dice
+from dice import EasyCalculator
 from fortune import FortuneMeow
 from fries_summon import FriesSummoner
 from sc_mutation import SC2Mutation
@@ -30,12 +31,13 @@ activity = discord.Activity(name='帥氣的威廷', type=discord.ActivityType.wa
 bot = FriesBot(command_prefix='!', help_command=None, activity=activity)
 
 # Modules
-tc = TwscCalendar()
 rt = ResponseTemplate()
+fs = FriesSummoner()
 fm = FortuneMeow()
 tm = TarotMeow()
-fs = FriesSummoner()
+tc = TwscCalendar()
 sm = SC2Mutation()
+ec = EasyCalculator()
 
 # Shortcut Functions
 def log(msg):
@@ -97,6 +99,11 @@ async def dice(ctx, dice='', name=None):
     msg = '%s %s' % (btl.mk_mention(ctx), Dice.roller(dice, name))
     await ctx.send(msg)
 
+@bot.command()
+async def calc(ctx, *args):
+    msg = ec.calc(' '.join(args))
+    await ctx.send(msg)
+
 ## Divination Commands
 @bot.command(name='薯條籤筒', aliases=['貓貓籤筒', '喵喵籤筒'])
 async def fortune(ctx):
@@ -119,7 +126,6 @@ async def tarot(ctx, *args):
         await ctx.send(msg, file=discord.File(path))
 
 # Dev Commands
-
 @bot.command(aliases=['r'])
 async def restart(ctx):
     if not bu.is_dev(ctx):

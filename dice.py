@@ -132,5 +132,53 @@ class DiceTest(unittest.TestCase, Dice):
         self.assertRaises(DiceRangeError, self._check_range, 0)
         self.assertRaises(DiceRangeError, self._check_range, -1)
 
+class EasyCalculator:
+    def __init__(self):
+        self.legal = re.compile(r'^[\d\+\-\*/% \(\)]*$')
+    
+    def calc(self, expr):
+        try:
+            self._is_easy(expr)
+            self._no_exp(expr)
+            self._is_calculable(expr)
+            return '計算結果：%s = %s' % (expr, eval(expr))
+        except Exception as e:
+            return str(e)
+    
+    def _is_easy(self, expr):
+        if not self.legal.match(expr) != None:
+            raise EasyCalculator.NotEasyExpression()
+        return True
+
+    def _no_exp(self, expr):
+        if '**' in expr:
+            raise EasyCalculator.ExponentNotAllowed()
+        return True
+    
+    def _is_calculable(self, expr):
+        try:
+            exec(expr)
+            return True
+        except ZeroDivisionError:
+            raise EasyCalculator.DividByZero()
+        except:
+            raise EasyCalculator.NotCalculable()
+    
+    class NotEasyExpression(Exception):
+        def __str__(self):
+            return '不是個簡易運算式，只能包含數字和 + - * / %'
+    
+    class ExponentNotAllowed(Exception):
+        def __str__(self):
+            return '不允許指數運算！'
+    
+    class NotCalculable(Exception):
+        def __str__(self):
+            return '格式錯誤的運算式'
+
+    class DividByZero(Exception):
+        def __str__(self):
+            return '算式出現除以零的行為'
+
 if __name__ == '__main__':
     unittest.main()
