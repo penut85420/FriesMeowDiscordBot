@@ -52,10 +52,10 @@ class SoEmotional:
         res = max_result[1]
         ress = [res]
         for _ in range(random.randint(2, 5)):
-            ress.append(self.data[res])
-            res = self.data[res]
-            if not res:
+            nextres = self.data.get(res)
+            if not nextres:
                 break
+            ress.append(self.data[res])
         return ress
 
 if __name__ == '__main__':
