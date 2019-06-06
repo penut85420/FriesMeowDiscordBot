@@ -14,6 +14,7 @@ from sc_mutation import SC2Mutation
 from tarot import TarotMeow
 from template import ResponseTemplate
 from twsc import TwscCalendar
+from soemotional import SoEmotional
 
 class FriesBot(commands.Bot):
     def __init__(self, **kwargs):
@@ -38,6 +39,7 @@ tm = TarotMeow()
 tc = TwscCalendar()
 sm = SC2Mutation()
 ec = EasyCalculator()
+se = SoEmotional()
 
 # Shortcut Functions
 def log(msg):
@@ -76,6 +78,12 @@ async def summon(ctx, n=1):
     
     for pic in fs.get_pictures(n):
         await ctx.send(file=discord.File(pic))
+
+@bot.command()
+async def say(ctx, *args):
+    msgs = se.get_responses(' '.join(args))
+    for msg in msgs:
+        await ctx.send(msg)
 
 ## StarCraft II Commands
 @bot.command(name='sc', aliases=['星海比賽', '星海賽事'])
