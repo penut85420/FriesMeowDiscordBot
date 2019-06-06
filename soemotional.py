@@ -55,7 +55,8 @@ class SoEmotional:
             nextres = self.data.get(res)
             if not nextres:
                 break
-            ress.append(self.data[res])
+            ress.append(nextres)
+            res = nextres
         return ress
 
 if __name__ == '__main__':
