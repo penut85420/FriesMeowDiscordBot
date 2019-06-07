@@ -15,8 +15,8 @@ for fullPath, fileName in walk_dir('./log'):
         for line in fin:
             try:
                 # 2019-06-05 04:53:11
-                date = line[:19]
-                date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S').strftime('%Y%m%d')
+                ndate = line[:19]
+                date = datetime.strptime(ndate, '%Y-%m-%d %H:%M:%S').strftime('%Y%m%d')
                 arr = newlog.get(date, list())
                 arr.append(line)
                 newlog[date] = arr
