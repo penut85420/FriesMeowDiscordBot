@@ -15,6 +15,7 @@ from tarot import TarotMeow
 from template import ResponseTemplate
 from twsc import TwscCalendar
 from soemotional import SoEmotional
+from wikiman import WikiMan
 
 class FriesBot(commands.Bot):
     def __init__(self, **kwargs):
@@ -40,6 +41,7 @@ tc = TwscCalendar()
 sm = SC2Mutation()
 ec = EasyCalculator()
 se = SoEmotional()
+wm = WikiMan()
 
 # Shortcut Functions
 def log(msg):
@@ -78,6 +80,12 @@ async def summon(ctx, n=1):
     
     for pic in fs.get_pictures(n):
         await ctx.send(file=discord.File(pic))
+
+@bot.command()
+async def wiki(ctx, *args):
+    msgs = wm.get_response(*args)
+    for msg in msgs:
+        await ctx.send(msg)
 
 @bot.command()
 async def say(ctx, *args):
