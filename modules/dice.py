@@ -151,18 +151,24 @@ class DiceTest(unittest.TestCase, Dice):
 class EasyCalculator:
     def __init__(self):
         self.legal = re.compile(r'^[\d\+\-\*/% \(\)]*$')
+        symbol_list = ['\d+', '\+', '\-', '\*', '/', '%', '\(', '\)']
+        self.symbol = re.compile('(%s)' % '|'.join(symbol_list))
 
     def calc(self, expr):
         try:
             self._is_easy(expr)
             self._no_exp(expr)
             self._is_calculable(expr)
-            return '計算結果：%s = %s' % (expr, eval(expr))
+            return '計算結果：%s = %s' % (self._pretty_expr(expr), eval(expr))
         except Exception as e:
             return str(e)
 
+    def _pretty_expr(self, expr):
+        result = self.symbol.findall(expr)
+        return ' '.join(result).replace('( ', '(').replace(' )', ')')
+
     def _is_easy(self, expr):
-        if not self.legal.match(expr) is None:
+        if self.legal.match(expr) is None:
             raise EasyCalculator.NotEasyExpression()
         return True
 
