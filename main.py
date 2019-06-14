@@ -13,7 +13,7 @@ from modules.dice import Dice, EasyCalculator
 from modules.fortune import FortuneMeow
 from modules.fries_summon import FriesSummoner
 from modules.sc_mutation import SC2Mutation
-from modules.soemotional import SoEmotional
+# from modules.soemotional import SoEmotional
 from modules.tarot import TarotMeow
 from modules.template import ResponseTemplate
 from modules.twsc import TwscCalendar
@@ -31,7 +31,7 @@ class FriesBot(commands.Bot):
             if msg.guild is not None:
                 if msg.guild.id not in ignore_id:
                     self.msg_log.info(
-                        'Message from {0.author}: {0.content}'.format(msg))
+                        '[{0.guild} <{0.guild.id}>] Message from {0.author}: {0.content}'.format(msg))
         await commands.Bot.on_message(self, msg)
 
 
@@ -44,7 +44,7 @@ tm = TarotMeow()
 tc = TwscCalendar()
 sm = SC2Mutation()
 ec = EasyCalculator()
-se = SoEmotional()
+# se = SoEmotional()
 wm = WikiMan()
 
 token = bu.get_token()
@@ -104,7 +104,8 @@ async def wiki(ctx, *args):
 
 @bot.command()
 async def say(ctx, *args):
-    msgs = se.get_responses(' '.join(args))
+    # msgs = se.get_responses(' '.join(args))
+    msgs = ['我暫時不想說話=3=']
     for msg in msgs:
         await ctx.send(msg)
 
