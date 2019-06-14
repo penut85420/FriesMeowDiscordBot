@@ -26,7 +26,10 @@ class FriesBot(commands.Bot):
         commands.Bot.__init__(self, **kwargs)
 
     async def on_message(self, msg):
-        ignore_id = [264445053596991498]
+        ignore_id = [
+            538361750651797504,
+            589066740714176532,
+        ]
         if msg.author != self.user:
             if msg.guild is not None:
                 if msg.guild.id not in ignore_id:
