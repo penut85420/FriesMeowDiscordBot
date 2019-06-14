@@ -29,12 +29,8 @@ class FriesBot(commands.Bot):
         await commands.Bot.on_message(self, msg)
 
 
-bu = btl.BotUtils()
-token = bu.get_token()
-activity = discord.Activity(name='帥氣的威廷', type=discord.ActivityType.watching)
-bot = FriesBot(command_prefix='!', help_command=None, activity=activity)
-
 # Modules
+bu = btl.BotUtils()
 rt = ResponseTemplate()
 fs = FriesSummoner()
 fm = FortuneMeow()
@@ -45,14 +41,22 @@ ec = EasyCalculator()
 se = SoEmotional()
 wm = WikiMan()
 
+token = bu.get_token()
+activity = discord.Activity(name='帥氣的威廷', type=discord.ActivityType.watching)
+bot = FriesBot(command_prefix='!', help_command=None, activity=activity)
+
 
 def log(msg):
     bot.msg_log.info(msg)
+
+# Events
 
 
 @bot.event
 async def on_ready():
     log('Logged in as %s' % bot.user)
+
+# Commands
 
 
 @bot.command(name='help', aliases=['喵'])
@@ -68,6 +72,8 @@ async def hello(ctx):
     except:
         msg = rt.get_response('hello', ctx.author.name)
     await ctx.send(msg)
+
+# Fries Commands
 
 
 @bot.command(name='召喚薯條', aliases=['召喚貓貓', '召喚喵喵'])
@@ -96,6 +102,8 @@ async def say(ctx, *args):
     for msg in msgs:
         await ctx.send(msg)
 
+# StarCraft II Commands
+
 
 @bot.command(name='sc', aliases=['星海比賽', '星海賽事'])
 async def fight(ctx):
@@ -114,6 +122,8 @@ async def mutation_next_week(ctx):
     msg = sm.get_next_week_stage()
     await ctx.send(msg)
 
+# TRPG Commands
+
 
 @bot.command()
 async def dice(ctx, dice='', name=None):
@@ -125,6 +135,8 @@ async def dice(ctx, dice='', name=None):
 async def calc(ctx, *args):
     msg = ec.calc(' '.join(args))
     await ctx.send(msg)
+
+# Fortune Commands
 
 
 @bot.command(name='薯條籤筒', aliases=['貓貓籤筒', '喵喵籤筒'])
@@ -147,6 +159,8 @@ async def tarot(ctx, *args):
 
     for msg, path in tm.get_many_tarot(n):
         await ctx.send(msg, file=discord.File(path))
+
+# Dev Commands
 
 
 @bot.command(aliases=['r'])
