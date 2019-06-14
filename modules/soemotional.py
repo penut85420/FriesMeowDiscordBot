@@ -4,13 +4,14 @@ import pickle as pk
 import random
 import os
 
+
 class SoEmotional:
     def __init__(self):
         self.init_vectorizer()
         with open('./data/data.pkl', 'rb') as pkl:
             self.data = pk.load(pkl)
         self.keys = list(self.data.keys())
-    
+
     def init_vectorizer(self):
         if not os.path.exists('./data/vec.pkl'):
             vec = TfidfVectorizer(analyzer='char')
@@ -29,7 +30,7 @@ class SoEmotional:
         s1 = s1.reshape(1, -1)
         s2 = s2.reshape(1, -1)
         return cosine_similarity(s1, s2)
-    
+
     def get_response(self, msg):
         msg = ' '.join(msg.replace(' ', ''))
         max_result = (0, None)
@@ -66,6 +67,7 @@ class SoEmotional:
             res = nextres
         return ress
 
+
 if __name__ == '__main__':
     se = SoEmotional()
 
@@ -79,7 +81,7 @@ if __name__ == '__main__':
         '為什麼她不愛我',
         '我該告白嗎'
     ]
-    
+
     for s in ss:
         print('Search for %s' % s)
         res = se.get_responses(s)

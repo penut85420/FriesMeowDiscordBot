@@ -1,11 +1,15 @@
-import urllib
-import requests
 import json
+import urllib
+
+import requests
+
 
 class WikiMan:
     def __init__(self):
-        self.wiki_url = 'https://zh.wikipedia.org/zh-tw/'
-        self.query_page = 'https://zh.wikipedia.org/w/api.php?action=query&titles=%s&prop=description|extracts&format=json&exintro=&explaintext=&variant=zh-tw&redirects'
+        with open('./data/wiki.json', 'r', encoding='UTF-8') as fin:
+            config = json.load(fin)
+        self.wiki_url = config['wiki']
+        self.query_page = config['query']
 
     def query(self, term):
         term = self._encode(term)
@@ -27,7 +31,7 @@ class WikiMan:
             rtn_results[title]['desc'] = desc
             rtn_results[title]['contents'] = contents
         return rtn_results
-    
+
     def get_response(self, *terms):
         results = self.get_summary(*terms)
         responses = list()
@@ -45,6 +49,7 @@ class WikiMan:
 
     def _encode(self, term):
         return urllib.parse.quote(term)
+
 
 if __name__ == '__main__':
     terms = ['孫中山', '魔法少女小圓', 'AKB48']

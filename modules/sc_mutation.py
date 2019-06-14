@@ -1,13 +1,16 @@
-import bot_util as btl
 import datetime as dt
+
+import modules.utils as btl
+
 
 class SC2Mutation:
     def __init__(self):
         self.stages = list(reversed(btl.load_pkl('./data/mutation_stage.pkl')))
         self.factors = btl.load_pkl('./data/mutation_factors.pkl')
-        self.template = open('./template/mutation', 'r', encoding='UTF-8').read()
+        self.template = open(
+            './template/mutation', 'r', encoding='UTF-8').read()
         self.next_week = dt.timedelta(days=7)
-    
+
     def get_recent_stage(self):
         now = dt.datetime.now()
         stage = self._get_stage_by_date(now)
@@ -17,7 +20,7 @@ class SC2Mutation:
         date = dt.datetime.now() + self.next_week
         stage = self._get_stage_by_date(date)
         return self._parse_stage_info(stage, title='下週異變')
-    
+
     def _get_stage_by_date(self, date):
         for stage in self.stages:
             if date > stage['date']:
@@ -36,6 +39,7 @@ class SC2Mutation:
         return self.template % (
             title, stage['stage_name'], stage['map_name'],
             self._parse_factors_info(stage['factors']))
+
 
 if __name__ == '__main__':
     sm = SC2Mutation()

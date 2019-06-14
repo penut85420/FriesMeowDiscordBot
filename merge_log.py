@@ -2,6 +2,7 @@ import os
 import contextlib
 from datetime import datetime
 
+
 def walk_dir(path):
     for dir_path, _, file_list in os.walk(path):
         for file_name in sorted(file_list):
