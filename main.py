@@ -53,7 +53,7 @@ class FriesBot(commands.Bot):
 
 
 token = bu.get_token()
-activity = discord.Activity(name='帥氣的威廷', type=discord.ActivityType.watching)
+activity = discord.Activity(name='奴僕清貓砂', type=discord.ActivityType.watching)
 bot = FriesBot(command_prefix='!', help_command=None, activity=activity)
 
 
