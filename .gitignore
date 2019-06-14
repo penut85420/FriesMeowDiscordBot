@@ -1,4 +1,4 @@
-env_dcbot/
+venv/
 tarot/
 data/
 .vscode/
@@ -6,7 +6,7 @@ __pycache__/
 test/
 fries_pictures/
 log/
-
+testing.py
 tmp
 
 *.log

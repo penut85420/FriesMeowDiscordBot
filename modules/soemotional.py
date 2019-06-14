@@ -2,6 +2,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import pickle as pk
 import random
+import os
 
 class SoEmotional:
     def __init__(self):
@@ -11,10 +12,16 @@ class SoEmotional:
         self.keys = list(self.data.keys())
     
     def init_vectorizer(self):
-        vec = TfidfVectorizer(analyzer='char')
-        with open('./data/raw.pkl', 'rb') as pkl:
-            data = pk.load(pkl)
-        self.vec = vec.fit(data)
+        if not os.path.exists('./data/vec.pkl'):
+            vec = TfidfVectorizer(analyzer='char')
+            with open('./data/raw.pkl', 'rb') as pkl:
+                data = pk.load(pkl)
+            self.vec = vec.fit(data)
+            with open('./data/vec.pkl', 'wb') as pkl:
+                pk.dump(self.vec, pkl)
+        else:
+            with open('./data/vec.pkl', 'rb') as pkl:
+                self.vec = pk.load(pkl)
 
     def calc_cos(self, s1, s2):
         ss = [s1, s2]

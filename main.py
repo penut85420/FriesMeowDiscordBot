@@ -6,16 +6,16 @@ import discord
 from discord.ext import commands
 
 import bot_util as btl
-from dice import Dice
-from dice import EasyCalculator
-from fortune import FortuneMeow
-from fries_summon import FriesSummoner
-from sc_mutation import SC2Mutation
-from tarot import TarotMeow
-from template import ResponseTemplate
-from twsc import TwscCalendar
-from soemotional import SoEmotional
-from wikiman import WikiMan
+from modules.dice import Dice
+from modules.dice import EasyCalculator
+from modules.fortune import FortuneMeow
+from modules.fries_summon import FriesSummoner
+from modules.sc_mutation import SC2Mutation
+from modules.tarot import TarotMeow
+from modules.template import ResponseTemplate
+from modules.twsc import TwscCalendar
+from modules.soemotional import SoEmotional
+from modules.wikiman import WikiMan
 
 class FriesBot(commands.Bot):
     def __init__(self, **kwargs):
