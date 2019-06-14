@@ -28,6 +28,7 @@ class FriesBot(commands.Bot):
     async def on_message(self, msg):
         ignore_id = [
             538361750651797504,
+            264445053596991498,
             589066740714176532,
         ]
         if msg.author != self.user:
