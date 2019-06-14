@@ -8,6 +8,7 @@ fries_pictures/
 log/
 testing.py
 tmp
+push
 
 *.log
 *.pickle

@@ -1,0 +1,1 @@
+[{0.guild} <{0.guild.id}>] Message from {0.author}: {0.content}

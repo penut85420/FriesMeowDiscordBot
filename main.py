@@ -4,6 +4,7 @@ Author: PenutChen
 import logging
 import random
 import re
+import datetime
 
 import discord
 from discord.ext import commands
@@ -20,25 +21,6 @@ from modules.twsc import TwscCalendar
 from modules.wikiman import WikiMan
 
 
-class FriesBot(commands.Bot):
-    def __init__(self, **kwargs):
-        self.msg_log = logging.getLogger('fries.meow.friesbot')
-        commands.Bot.__init__(self, **kwargs)
-
-    async def on_message(self, msg):
-        ignore_id = [
-            538361750651797504,
-            264445053596991498,
-            589066740714176532,
-        ]
-        if msg.author != self.user:
-            if msg.guild is not None:
-                if msg.guild.id not in ignore_id:
-                    self.msg_log.info(
-                        '[{0.guild} <{0.guild.id}>] Message from {0.author}: {0.content}'.format(msg))
-        await commands.Bot.on_message(self, msg)
-
-
 # Modules
 bu = btl.BotUtils()
 rt = ResponseTemplate()
@@ -50,6 +32,25 @@ sm = SC2Mutation()
 ec = EasyCalculator()
 # se = SoEmotional()
 wm = WikiMan()
+
+
+class FriesBot(commands.Bot):
+    def __init__(self, **kwargs):
+        self.msg_log = logging.getLogger('fries.meow.friesbot')
+        self.ignore_channels = bu.get_ignore_channels()
+        bu.start_time = datetime.datetime.now()
+        commands.Bot.__init__(self, **kwargs)
+
+    async def on_message(self, msg):
+        if msg.author != self.user:
+            if msg.guild is not None:
+                if msg.content == '!r' and msg.guild.id == bu.restart_channel:
+                    btl.restart_bot()
+                    await bot.close()
+                if msg.guild.id not in self.ignore_channels:
+                    self.msg_log.info(rt.get_response('msglog').format(msg))
+        await commands.Bot.on_message(self, msg)
+
 
 token = bu.get_token()
 activity = discord.Activity(name='帥氣的威廷', type=discord.ActivityType.watching)
@@ -192,5 +193,14 @@ async def bye(ctx):
     btl.shutdown_bot()
     await ctx.send('Bye!')
     await bot.close()
+
+
+@bot.command(aliases=['v'])
+async def version(ctx):
+    if not bu.is_dev(ctx):
+        await bu.not_dev_msg(ctx)
+        return
+
+    await ctx.send('Last build: %s' % bu.get_build_time())
 
 bot.run(token)

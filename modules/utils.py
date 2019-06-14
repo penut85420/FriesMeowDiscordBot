@@ -100,6 +100,8 @@ def exchange_name(msg):
 class BotUtils:
     def __init__(self):
         self.config = load_config()
+        self.restart_channel = self.config['restart_channel']
+        self.start_time = dt.datetime.now()
         self.config['is_debug'] = self.config['is_debug'] == "True"
         self.dev_id_dict = dict()
         for dev_id in [int(line) for line in self.config['dev_id']]:
@@ -112,6 +114,12 @@ class BotUtils:
     def get_token(self):
         token_key = 'token_test' if self.config['is_debug'] else 'token'
         return self.config[token_key]
+
+    def get_ignore_channels(self):
+        return self.config['ignore_channels']
+
+    def get_build_time(self):
+        return self.start_time.strftime('%Y-%m-%d %H:%M:%S')
 
     async def not_dev_msg(self, ctx):
         await ctx.send('%s 你不是開發人員，不能用這個指令 (((ﾟдﾟ)))' % ctx.author.name)
