@@ -10,7 +10,8 @@ import discord
 from discord.ext import commands
 
 import modules.utils as btl
-from modules.dice import Dice, EasyCalculator
+from modules.dice import Dice
+from modules.easy_calculator import EasyCalculator
 from modules.fortune import FortuneMeow
 from modules.fries_summon import FriesSummoner
 from modules.sc_mutation import SC2Mutation
