@@ -10,4 +10,4 @@ script: true
   - nosetests --with-coverage --coverage report
 
 script:
-  - python myObject_test.py
+  - python run_test.py
