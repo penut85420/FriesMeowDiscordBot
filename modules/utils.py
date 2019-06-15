@@ -2,7 +2,6 @@ import datetime as dt
 import json
 import logging
 import os
-import pickle as pk
 
 LOG_DIR = './log'
 
@@ -44,10 +43,6 @@ def mk_mention(ctx):
 
 def load_json(file_path):
     return json.load(open(file_path, 'r', encoding='UTF-8'))
-
-
-def load_pkl(file_path):
-    return pk.load(open(file_path, 'rb'))
 
 
 def walk_dir(dir_path):

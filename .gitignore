@@ -6,6 +6,8 @@ __pycache__/
 test/
 fries_pictures/
 log/
+tools/
+
 testing.py
 tmp
 push
