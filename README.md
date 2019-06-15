@@ -1,5 +1,7 @@
 # 薯條喵喵喵 >ω< Discord Bot
 
+[![Build Status](https://travis-ci.org/penut85420/FriesMeowDiscordBot.svg?branch=master)](https://travis-ci.org/penut85420/FriesMeowDiscordBot)
+
 薯條喵喵喵降臨在 Discord 上啦！  
 歡迎加入 [Discord 群組](https://discord.gg/HyQEypc)  
 或者[邀請薯條喵喵喵 >ω< 加入](https://tinyurl.com/FriesMeow)你的 Discord 群組
