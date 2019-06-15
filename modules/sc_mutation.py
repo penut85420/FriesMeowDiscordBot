@@ -1,15 +1,23 @@
 import datetime as dt
-
-import modules.utils as btl
+import json
 
 
 class SC2Mutation:
     def __init__(self):
-        self.stages = list(reversed(btl.load_pkl('./data/mutation_stage.pkl')))
-        self.factors = btl.load_pkl('./data/mutation_factors.pkl')
+        self._load_data()
         self.template = open(
             './template/mutation', 'r', encoding='UTF-8').read()
         self.next_week = dt.timedelta(days=7)
+
+    def _load_data(self):
+        with open('./data/mutation.json', 'r', encoding='UTF-8') as fin:
+            data = json.load(fin)
+
+        self.stages = list(reversed(data['stages']))
+        for stage in self.stages:
+            stage['date'] = dt.datetime.strptime(stage['date'], '%Y/%m/%d')
+
+        self.factors = data['factors']
 
     def get_recent_stage(self):
         now = dt.datetime.now()
