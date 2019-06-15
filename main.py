@@ -14,7 +14,6 @@ from modules.dice import Dice, EasyCalculator
 from modules.fortune import FortuneMeow
 from modules.fries_summon import FriesSummoner
 from modules.sc_mutation import SC2Mutation
-# from modules.soemotional import SoEmotional
 from modules.tarot import TarotMeow
 from modules.template import ResponseTemplate
 from modules.twsc import TwscCalendar
@@ -30,7 +29,6 @@ tm = TarotMeow()
 tc = TwscCalendar()
 sm = SC2Mutation()
 ec = EasyCalculator()
-# se = SoEmotional()
 wm = WikiMan()
 
 
