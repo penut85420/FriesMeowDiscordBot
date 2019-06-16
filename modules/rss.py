@@ -144,7 +144,6 @@ class RssMan:
             ToyPeopleRss,
             UdnAnimeRss,
             UdnGameRss,
-            TestRss
         ]
         self.init_rss()
         self.init_channel()
