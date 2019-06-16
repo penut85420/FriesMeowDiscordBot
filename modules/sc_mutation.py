@@ -31,6 +31,7 @@ class SC2Mutation:
         delta -= dt.datetime.now()
         minutes = delta.seconds // 60
         hours = minutes // 60
+        minutes %= 60
         msg = '%d 天 %d 時 %d 分' % (delta.days, hours, minutes)
         msg = '距離下週異變還有 %s\n\n' % msg
         return msg
