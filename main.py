@@ -1,10 +1,11 @@
 """
 Author: PenutChen
 """
+import asyncio
+import datetime
 import logging
 import random
 import re
-import datetime
 
 import discord
 from discord.ext import commands
@@ -19,7 +20,7 @@ from modules.tarot import TarotMeow
 from modules.template import ResponseTemplate
 from modules.twsc import TwscCalendar
 from modules.wikiman import WikiMan
-
+from modules.rss import RssMan
 
 # Modules
 bu = btl.BotUtils()
@@ -31,6 +32,7 @@ tc = TwscCalendar()
 sm = SC2Mutation()
 ec = EasyCalculator()
 wm = WikiMan()
+ur = RssMan()
 
 
 class FriesBot(commands.Bot):
@@ -58,6 +60,30 @@ bot = FriesBot(command_prefix='!', help_command=None, activity=activity)
 
 def log(msg):
     bot.msg_log.info(msg)
+
+# Testing
+
+
+async def loop():
+    await bot.wait_until_ready()
+    while not bot.is_closed():
+        try:
+            rtn = ur.update()
+            for k in rtn:
+                for p in rtn[k]:
+                    for ch in ur.channel:
+                        channel = bot.get_channel(ch)
+                        await channel.send(str(p))
+        except:
+            pass
+        await asyncio.sleep(60 * 15)
+bot.loop.create_task(loop())
+
+
+@bot.command()
+async def register(ctx):
+    ur.register(ctx.channel.id)
+    await ctx.send('Ok!')
 
 # Events
 
