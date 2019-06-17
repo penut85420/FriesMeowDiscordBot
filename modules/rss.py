@@ -178,9 +178,16 @@ class RssMan:
     def register(self, channel):
         if channel not in self.channel:
             self.channel.append(channel)
+        self.save_channel()
+
+    def unregister(self, channel):
+        while channel in self.channel:
+            self.channel.remove(channel)
+        self.save_channel()
+
+    def save_channel(self):
         with open(RssMan.CHANNEL_PATH, 'w', encoding='UTF-8') as fout:
             json.dump(self.channel, fout)
-
 
 if __name__ == '__main__':
     RssMan()

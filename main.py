@@ -52,7 +52,6 @@ class FriesBot(commands.Bot):
                     self.msg_log.info(rt.get_response('msglog').format(msg))
         await commands.Bot.on_message(self, msg)
 
-
 token = bu.get_token()
 activity = discord.Activity(name='奴僕清貓砂', type=discord.ActivityType.watching)
 bot = FriesBot(command_prefix='!', help_command=None, activity=activity)
@@ -62,7 +61,6 @@ def log(msg):
     bot.msg_log.info(msg)
 
 # Testing
-
 
 async def loop():
     await bot.wait_until_ready()
@@ -83,6 +81,12 @@ bot.loop.create_task(loop())
 @bot.command()
 async def register(ctx):
     ur.register(ctx.channel.id)
+    await ctx.send('Ok!')
+
+
+@bot.command()
+async def unregister(ctx):
+    ur.unregister(ctx.channel.id)
     await ctx.send('Ok!')
 
 # Events
