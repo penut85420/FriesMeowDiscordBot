@@ -95,6 +95,14 @@ class FreeGroupRss(RssSubscriber):
         super().__init__(self.url, self.time_pt)
 
 
+class TheNewsLensRss(RssSubscriber):
+    """The News Lens 關鍵評論網"""
+    def __init__(self):
+        self.url = 'http://feeds.feedburner.com/TheNewsLens?format=xml'
+        self.time_pt = '%a, %d %b %Y %H:%M:%S +0800'
+        super().__init__(self.url, self.time_pt)
+
+
 class UdnRss(RssSubscriber):
     """聯合新聞網"""
     def __init__(self, url):
@@ -144,6 +152,7 @@ class RssMan:
             ToyPeopleRss,
             UdnAnimeRss,
             UdnGameRss,
+            TheNewsLensRss,
         ]
         self.init_rss()
         self.init_channel()
