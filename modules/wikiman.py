@@ -1,8 +1,9 @@
+import sys
+sys.path.append('..')
 import json
 import urllib
-
 import requests
-
+from zhhanz_conv import ZhhanzMan
 
 class WikiMan:
     def __init__(self):
@@ -10,6 +11,7 @@ class WikiMan:
             config = json.load(fin)
         self.wiki_url = config['wiki']
         self.query_page = config['query']
+        self.zhman = ZhhanzMan()
 
     def query(self, term):
         term = self._encode(term)
@@ -24,9 +26,11 @@ class WikiMan:
         for page in query_pages:
             title = page['title']
             desc = page.get('description', None)
-            if desc == '维基百科消歧义页':
-                desc = '維基百科消歧義頁面'
+            if desc:
+                desc = self.zhman.trans_s2t(desc)
             contents = page.get('extract', None)
+            if contents:
+                contents = self.zhman.trans_s2t(contents)
             rtn_results[title] = dict()
             rtn_results[title]['desc'] = desc
             rtn_results[title]['contents'] = contents
