@@ -24,7 +24,7 @@ class WikiMan:
         query_pages = list(query_results['query']['pages'].values())
         rtn_results = dict()
         for page in query_pages:
-            title = page['title']
+            title = self.zhman.trans_s2t(page['title'])
             desc = page.get('description', None)
             if desc:
                 desc = self.zhman.trans_s2t(desc)
