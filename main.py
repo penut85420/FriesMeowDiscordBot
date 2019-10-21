@@ -47,9 +47,9 @@ class FriesBot(commands.Bot):
             if msg.content == '!r' and msg.channel.id == bu.restart_channel:
                 btl.restart_bot()
                 await bot.close()
-            if msg.guild is not None:
-                if msg.guild.id not in self.ignore_channels:
-                    self.msg_log.info(rt.get_response('msglog').format(msg))
+            # if msg.guild is not None:
+            #     if msg.guild.id not in self.ignore_channels:
+            #         self.msg_log.info(rt.get_response('msglog').format(msg))
         await commands.Bot.on_message(self, msg)
 
 token = bu.get_token()
