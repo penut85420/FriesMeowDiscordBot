@@ -22,6 +22,7 @@ class TarotMeow:
         with open('./data/tarot_cht.json', 'r', encoding='UTF-8') as fin:
             self.tarot = json.load(fin)
         self.logger = logging.getLogger('fries.meow.tarot')
+        self._init_query_dict()
 
     def get_tarot(self):
         i, r = self._get_tarot_info()
@@ -69,7 +70,7 @@ class TarotMeow:
         card_name = list()
         for idx in self.tarot:
             name = self.tarot[idx]['name']
-            self.query[name] = idx
+            self.query[name] = int(idx)
             card_name.append(name)
         self.query_pattern = re.compile('(%s)' % '|'.join(card_name))
 
@@ -81,10 +82,40 @@ class TarotMeow:
         return 0
 
     def query_card(self, query):
-        query_card = self.query_pattern.findall(query)[0]
-        query_dir = self.is_reversed(term)
+        try:
+            query_card = self.query_pattern.findall(query)[0]
+            query_dir = self.is_reversed(query)
+            return self._get_tarot_msg_path(self.query[query_card], query_dir)
+        except:
+            sim_name = self.calc_similarity(query)
+            return '找不到**%s**這張牌，你是指**%s**嗎?' % (query, sim_name), None
 
+    def calc_similarity(self, query):
+        names = ['正向正位' + val['name'] for val in self.tarot.values()]
+        names += ['反向反位' + val['name'] for val in self.tarot.values()]
+        max_sim, max_name = float('-inf'), ''
+        for name in names:
+            sim = self.sim(name, query)
+            if sim > max_sim:
+                max_sim = sim
+                max_name = name
+        return max_name[4:]
+
+    def sim(self, q1, q2):
+        s1 = set(q1)
+        s2 = set(q2)
+        a = len(s1 & s2)
+        b = len(s1 | s2)
+        return a / b
 
 if __name__ == '__main__':
     tm = TarotMeow()
-    print(tm.get_tarot()[0])
+    # print(tm.query)
+    print(tm.query_card('愚者'))
+    print(tm.query_card('愚人'))
+    print(tm.query_card('反向騎士寶劍'))
+    print(tm.query_card('金幣侍衛'))
+    print(tm.query_card('王后'))
+    print(tm.query_card('國王'))
+    # print(tm.get_tarot()[0])
+    print(tm.tarot.keys())

@@ -47,6 +47,7 @@ class FriesBot(commands.Bot):
             if msg.content == '!r' and msg.channel.id == bu.restart_channel:
                 btl.restart_bot()
                 await bot.close()
+            # Message log is too noise.
             # if msg.guild is not None:
             #     if msg.guild.id not in self.ignore_channels:
             #         self.msg_log.info(rt.get_response('msglog').format(msg))
@@ -106,7 +107,7 @@ async def help(ctx):
 
 
 @bot.command(aliases=['哈囉'])
-async def hello(ctx):
+async def hello(ctx, *args):
     try:
         msg = rt.get_response('hello', ctx.author.nick or ctx.author.name)
     except:
@@ -180,7 +181,7 @@ async def calc(ctx, *args):
 # Fortune Commands
 
 
-@bot.command(name='薯條籤筒', aliases=['貓貓籤筒', '喵喵籤筒'])
+@bot.command(name='薯條籤筒', aliases=['貓貓籤筒', '喵喵籤筒', '薯條籤桶', '貓貓籤桶', '喵喵籤桶'])
 async def fortune(ctx):
     msg = rt.get_response('fortune', btl.mk_mention(ctx), fm.get_fortune())
     await ctx.send(msg)
@@ -200,6 +201,16 @@ async def tarot(ctx, *args):
 
     for msg, path in tm.get_many_tarot(n):
         await ctx.send(msg, file=discord.File(path))
+
+
+@bot.command(name='薯條解牌', aliases=['貓貓解牌', '喵喵解牌'])
+async def tarot_query(ctx, *args):
+    for query in args:
+        msg, path = tm.query_card(query)
+        if path:
+            await ctx.send(msg, file=discord.File(path))
+        else:
+            await ctx.send(msg)
 
 # Dev Commands
 
