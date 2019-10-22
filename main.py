@@ -47,6 +47,10 @@ class FriesBot(commands.Bot):
             if msg.content == '!r' and msg.channel.id == bu.restart_channel:
                 btl.restart_bot()
                 await bot.close()
+            elif msg.content == '!bye' and msg.channel.id == bu.restart_channel:
+                btl.shutdown_bot()
+                await bot.close()
+
             if msg.guild is not None:
                 if msg.guild.id not in self.ignore_channels:
                     if msg.content.startswith('!'):
