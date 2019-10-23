@@ -21,6 +21,7 @@ from modules.template import ResponseTemplate
 from modules.twsc import TwscCalendar
 from modules.wikiman import WikiMan
 from modules.rss import RssMan
+from modules.sixty_jiazi import SixtyJiazi
 
 # Modules
 bu = btl.BotUtils()
@@ -33,6 +34,7 @@ sm = SC2Mutation()
 ec = EasyCalculator()
 wm = WikiMan()
 ur = RssMan()
+sj = SixtyJiazi()
 
 
 class FriesBot(commands.Bot):
@@ -190,6 +192,10 @@ async def fortune(ctx):
     msg = rt.get_response('fortune', btl.mk_mention(ctx), fm.get_fortune())
     await ctx.send(msg)
 
+@bot.command(name='薯條甲子籤', aliases=['貓貓甲子籤', '喵喵甲子籤'])
+async def sixty_jiazi(ctx):
+    msg = sj.pick()
+    await ctx.send(msg)
 
 @bot.command(name='薯條塔羅', aliases=['貓貓塔羅', '喵喵塔羅'])
 async def tarot(ctx, *args):
