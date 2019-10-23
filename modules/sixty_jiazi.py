@@ -16,8 +16,9 @@ class SixtyJiazi:
         poemt = concat(poem['poem'])
         item = concat(poem['item'])
         story = concat(poem['story'])
+        detail = f'http://www.ma-tsu.com.tw/lot_go.asp?anum={r+1}'
 
-        result = f'**{title}**\n\n{gua}\n\n{poemt}\n\n{item}\n\n參考故事：\n{story}'
+        result = f'**{title}**\n\n{gua}\n\n{poemt}\n\n{item}\n\n參考故事：\n{story}\n\n詳解網站：\n<{detail}>'
         return result
 
 if __name__ == "__main__":
