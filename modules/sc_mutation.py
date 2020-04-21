@@ -45,7 +45,7 @@ class SC2Mutation:
 
     def _get_stage_by_date(self, date):
         for stage in self.stages:
-            if date > stage['date']:
+            if date > stage['date'] and date <= stage['date'] + self.next_week:
                 return stage
         return None
 

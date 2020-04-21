@@ -9,6 +9,7 @@ import re
 
 import discord
 from discord.ext import commands
+from discord.ext.commands import CommandNotFound
 
 import modules.utils as btl
 from modules.dice import Dice
@@ -21,6 +22,7 @@ from modules.template import ResponseTemplate
 from modules.twsc import TwscCalendar
 from modules.wikiman import WikiMan
 from modules.sixty_jiazi import SixtyJiazi
+from modules.meow_talk import MeowTalk
 
 # Modules
 bu = btl.BotUtils()
@@ -33,6 +35,7 @@ sm = SC2Mutation()
 ec = EasyCalculator()
 wm = WikiMan()
 sj = SixtyJiazi()
+mt = MeowTalk()
 
 
 class FriesBot(commands.Bot):
@@ -43,18 +46,25 @@ class FriesBot(commands.Bot):
         commands.Bot.__init__(self, **kwargs)
 
     async def on_message(self, msg):
-        if msg.author != self.user:
-            if msg.content == '!r' and msg.channel.id == bu.restart_channel:
-                btl.restart_bot()
-                await bot.close()
-            elif msg.content == '!bye' and msg.channel.id == bu.restart_channel:
-                btl.shutdown_bot()
-                await bot.close()
+        if msg.author == self.user:
+            return
 
-            if msg.guild is not None:
-                if msg.guild.id not in self.ignore_channels:
-                    if msg.content.startswith('!'):
-                        self.msg_log.info(rt.get_response('msglog').format(msg))
+        if msg.content == '!r' and msg.channel.id == bu.restart_channel:
+            btl.restart_bot()
+            await bot.close()
+        elif msg.content == '!bye' and msg.channel.id == bu.restart_channel:
+            btl.shutdown_bot()
+            await bot.close()
+
+        if msg.guild is not None:
+            if msg.guild.id not in self.ignore_channels:
+                if msg.content.startswith('!'):
+                    self.msg_log.info(rt.get_response('msglog').format(msg))
+
+        name_tag = f'<@!{self.user.id}>'
+        if msg.guild is None or msg.content.startswith(name_tag):
+            await msg.channel.send(mt.get_sent())
+
         await commands.Bot.on_message(self, msg)
 
 token = bu.get_token()
@@ -71,6 +81,12 @@ def log(msg):
 @bot.event
 async def on_ready():
     log('Logged in as %s' % bot.user)
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, CommandNotFound):
+        return
+    log(str(error).replace('\n', ' | '))
 
 # Commands
 
@@ -119,10 +135,7 @@ async def wiki(ctx, *args):
 
 @bot.command()
 async def say(ctx, *args):
-    # msgs = se.get_responses(' '.join(args))
-    msgs = ['我暫時不想說話=3=']
-    for msg in msgs:
-        await ctx.send(msg)
+    await ctx.send(mt.get_sent())
 
 # StarCraft II Commands
 
