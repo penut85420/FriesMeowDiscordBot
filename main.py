@@ -62,7 +62,8 @@ class FriesBot(commands.Bot):
                     self.msg_log.info(rt.get_response('msglog').format(msg))
 
         name_tag = f'<@!{self.user.id}>'
-        if msg.guild is None or msg.content.startswith(name_tag):
+        if msg.guild is None and not msg.content.startswith('!') or msg.content.startswith(name_tag):
+            self.msg_log.info(rt.get_response('msglog').format(msg))
             await msg.channel.send(mt.get_sent())
 
         await commands.Bot.on_message(self, msg)

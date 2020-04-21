@@ -1,1 +1,1 @@
-[{0.guild} <{0.guild.id}:{0.channel.id}>] Message from {0.author}<{0.author.id}>: {0.content}
+[{0.guild} #{0.channel}] {0.author}<{0.author.id}>: {0.content}
