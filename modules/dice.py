@@ -5,7 +5,7 @@ import unittest
 
 class DiceFormatError(Exception):
     def __str__(self):
-        return '格式必須是 NdM 或 NdM+K'
+        return '格式必須是 NdM 或 NdM+K，例如 2d6 是投擲兩顆六面的骰子'
 
 
 class DiceRangeError(Exception):
