@@ -20,7 +20,6 @@ from modules.tarot import TarotMeow
 from modules.template import ResponseTemplate
 from modules.twsc import TwscCalendar
 from modules.wikiman import WikiMan
-from modules.rss import RssMan
 from modules.sixty_jiazi import SixtyJiazi
 
 # Modules
@@ -33,7 +32,6 @@ tc = TwscCalendar()
 sm = SC2Mutation()
 ec = EasyCalculator()
 wm = WikiMan()
-ur = RssMan()
 sj = SixtyJiazi()
 
 
@@ -67,35 +65,6 @@ bot = FriesBot(command_prefix='!', help_command=None, activity=activity)
 def log(msg):
     bot.msg_log.info(msg)
 
-# Testing
-
-async def loop():
-    await bot.wait_until_ready()
-    while not bot.is_closed():
-        try:
-            rtn = ur.update()
-            for k in rtn:
-                for p in rtn[k]:
-                    for ch in ur.channel:
-                        channel = bot.get_channel(ch)
-                        await channel.send(str(p))
-        except:
-            pass
-        await asyncio.sleep(60 * 15)
-bot.loop.create_task(loop())
-
-
-@bot.command()
-async def register(ctx):
-    ur.register(ctx.channel.id)
-    await ctx.send('Ok!')
-
-
-@bot.command()
-async def unregister(ctx):
-    ur.unregister(ctx.channel.id)
-    await ctx.send('Ok!')
-
 # Events
 
 
@@ -122,6 +91,11 @@ async def hello(ctx, *args):
 
 # Fries Commands
 
+
+@bot.command(name='時間', aliases=['time'])
+async def time(ctx):
+    ts = datetime.datetime.now().strftime('%H:%M:%S')
+    await ctx.send(f'喵喵喵，現在是臺灣時間 {ts}')
 
 @bot.command(name='召喚薯條', aliases=['召喚貓貓', '召喚喵喵'])
 async def summon(ctx, n=1):
@@ -253,4 +227,5 @@ async def version(ctx):
 
     await ctx.send('Last build: %s' % bu.get_build_time())
 
-bot.run(token)
+if __name__ == "__main__":
+    bot.run(token)
