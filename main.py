@@ -106,6 +106,18 @@ async def hello(ctx, *args):
         msg = rt.get_response('hello', ctx.author.name)
     await ctx.send(msg)
 
+@bot.command(name='灑花', aliases=['撒花'])
+async def sprinkle(ctx, *args):
+    try:
+        n = int(args[0])
+    except:
+        n = 1
+    if n < 1: n = 1
+    if n > 5: n = 5
+    msg = ['灑花 (\\*￣▽￣)/‧☆\\*"\\`\'\\*-.,_,.-\\*\'\\`"\\*-.,_☆'] * n
+    msg = '\n'.join(msg)
+    await ctx.send(msg)
+
 # Fries Commands
 
 
