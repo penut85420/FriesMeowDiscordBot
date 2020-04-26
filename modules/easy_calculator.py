@@ -3,8 +3,8 @@ import re
 
 class EasyCalculator:
     def __init__(self):
-        self.legal = re.compile(r'^[\d\+\-\*/% \(\)]*$')
-        symbol_list = ['\d+', '\+', '\-', '\*', '/', '%', '\(', '\)']
+        self.legal = re.compile(r'^[\.\de\+\-\*/% \(\)]*$')
+        symbol_list = ['[\d]+e[\+\-][\d]+', '[\d\.]+', '\+', '\-', '\*', '/', '%', '\(', '\)']
         self.symbol = re.compile('(%s)' % '|'.join(symbol_list))
 
     def calc(self, expr):
@@ -12,7 +12,7 @@ class EasyCalculator:
             self._is_easy(expr)
             self._no_exp(expr)
             self._is_calculable(expr)
-            return '計算結果：%s = %s' % (self._pretty_expr(expr), eval(expr))
+            return '計算結果：%s = %s' % (self._pretty_expr(expr), str(eval(expr)).upper())
         except Exception as e:
             return str(e)
 
@@ -54,3 +54,10 @@ class EasyCalculator:
     class DividByZero(Exception):
         def __str__(self):
             return '算式出現除以零的行為'
+
+if __name__ == "__main__":
+    EC = EasyCalculator()
+    print(EC.calc('1e+5*3.14'))
+    # s = '3e-5'
+    # p = '[\d]+e[\+\-][\d]+'
+    # print(re.search(p, s))

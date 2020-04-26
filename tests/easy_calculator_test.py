@@ -1,3 +1,5 @@
+import sys
+sys.path.append('.')
 from unittest import TestCase
 from modules.easy_calculator import EasyCalculator
 
@@ -8,6 +10,7 @@ class EasyCalculatorTest(TestCase):
         data = [
             ('1+2-3', '計算結果：1 + 2 - 3 = 0'),
             ('(1-(2   + 3)*4)/ 5', '計算結果：(1 - (2 + 3) * 4) / 5 = -3.8'),
+            ('1e+5*3.14', '計算結果：1e+5 * 3.14 = 314000.0'),
             ('a+b', '不是個簡易運算式，只能包含數字和 + - * / %'),
             ('(1-(2   + 3)*4)/ 5)', '格式錯誤的運算式'),
             ('9**9', '不允許指數運算！'),
