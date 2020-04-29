@@ -129,14 +129,22 @@ async def time(ctx):
 @bot.command(name='召喚薯條', aliases=['召喚貓貓', '召喚喵喵'])
 async def summon(ctx, n=1):
     n = int(n)
+
+    send = ctx.send
+
+    if n > 1:
+        if ctx.guild is not None:
+            await ctx.send('%s 召喚超過一張會改成私訊給你喔！' % btl.mk_mention(ctx))
+        send = ctx.author.send
+
     if n > 10:
         n = 10
-        await ctx.send('%s 不可以一次召喚太多啊啊啊會壞掉啊啊啊啊啊' % btl.mk_mention(ctx))
+        await send('%s 不可以一次召喚太多啊啊啊會壞掉啊啊啊啊啊' % btl.mk_mention(ctx))
     else:
-        await ctx.send('%s 熱騰騰的薯條來囉~' % btl.mk_mention(ctx))
+        await send('%s 熱騰騰的薯條來囉~' % btl.mk_mention(ctx))
 
     for pic in fs.get_pictures(n):
-        await ctx.send(file=discord.File(pic))
+        await send(file=discord.File(pic))
 
 
 @bot.command()
@@ -201,16 +209,23 @@ async def sixty_jiazi(ctx):
 async def tarot(ctx, *args):
     n, has_num = btl.cast_int(args)
 
+    send = ctx.send
+
+    if n > 1:
+        if ctx.guild is not None:
+            await ctx.send('%s 抽超過一張塔羅牌會改成私訊給你喔！' % btl.mk_mention(ctx))
+        send = ctx.author.send
+
     if len(args) > has_num:
         wish = ' '.join(args[has_num:])
         wish = btl.exchange_name(wish)
         msg = '%s 讓本喵來占卜看看 %s ლ(́◕◞౪◟◕‵ლ)' % (btl.mk_mention(ctx), wish)
     else:
         msg = '%s 讓本喵來幫你抽個 ლ(́◕◞౪◟◕‵ლ)' % (btl.mk_mention(ctx))
-    await ctx.send(msg)
+    await send(msg)
 
     for msg, path in tm.get_many_tarot(n):
-        await ctx.send(msg, file=discord.File(path))
+        await send(msg, file=discord.File(path))
 
 
 @bot.command(name='薯條解牌', aliases=['貓貓解牌', '喵喵解牌'])
