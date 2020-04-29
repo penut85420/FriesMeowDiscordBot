@@ -1,17 +1,19 @@
 # 薯條喵喵喵 >ω< Discord Bot
 
 [![Build Status](https://travis-ci.org/penut85420/FriesMeowDiscordBot.svg?branch=master)](https://travis-ci.org/penut85420/FriesMeowDiscordBot)
+[![Discord Bots](https://top.gg/api/widget/status/347020077398229003.svg)](https://top.gg/bot/347020077398229003)
 
 薯條喵喵喵降臨在 Discord 上啦！  
 歡迎加入 [Discord 群組](https://discord.gg/HyQEypc)  
-或者[邀請薯條喵喵喵 >ω< 加入](https://tinyurl.com/FriesMeow)你的 Discord 群組
+或者[邀請薯條喵喵喵 >ω< 加入](https://tinyurl.com/FriesMeow)你的 Discord 群組  
+[薯條喵喵喵 >ω< 的 top.gg 介紹頁面](https://top.gg/bot/347020077398229003)  
 
 ## 使用簡介
 + 指令以 `!` 開頭
 + 輸入 `!喵` 可以顯示幫助訊息
-+ 輸入 `!時間` 可以顯示當前臺灣時間
 + 輸入 `!哈囉` 可以跟我打招呼
 + 輸入 `!灑花` 可以灑花
++ 輸入 `!時間` 可以顯示當前臺灣時間
 + 輸入 `!召喚薯條` 可以獲得本喵的美照一張
 + 輸入 `!薯條籤筒` 可以讓本喵來幫你抽根淺草籤
 + 輸入 `!薯條甲子籤` 可以讓本喵幫你抽一張六十甲子籤
