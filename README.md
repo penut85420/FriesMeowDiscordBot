@@ -3,17 +3,25 @@
 [![Build Status](https://travis-ci.org/penut85420/FriesMeowDiscordBot.svg?branch=master)](https://travis-ci.org/penut85420/FriesMeowDiscordBot)
 [![Discord Bots](https://top.gg/api/widget/status/347020077398229003.svg)](https://top.gg/bot/347020077398229003)
 
-薯條喵喵喵降臨在 Discord 上啦！  
-歡迎加入 [Discord 群組](https://discord.gg/HyQEypc)  
-或者[邀請薯條喵喵喵 >ω< 加入](https://tinyurl.com/FriesMeow)你的 Discord 群組  
-[薯條喵喵喵 >ω< 的 top.gg 介紹頁面](https://top.gg/bot/347020077398229003)  
+## 簡介
++ 薯條喵喵喵降臨在 Discord 上啦！
+  + 歡迎加入 [薯條喵喵喵 >ω< Discord 群組](https://discord.gg/HyQEypc)
+  + 邀請薯條喵喵喵 >ω< 加入你的 Discord 群組
+    + [邀請連結](https://tinyurl.com/FriesMeow)
+  + 喜歡薯條的話，來幫她按個讚吧！
+    + [top.gg 介紹頁面](https://top.gg/bot/347020077398229003)
+  + [薯條的臉書粉絲團](https://www.facebook.com/FattyCatFries/)
+  + [薯條的 Instagram](https://www.instagram.com/fatty_fries_cat/)
++ 感謝大家的支持，薯條成功獲得了 Discord 的官方認證，成為已認證的機器人了！
 
-## 使用簡介
+## 指令一覽
 + 指令以 `!` 開頭
 + 輸入 `!喵` 可以顯示幫助訊息
 + 輸入 `!哈囉` 可以跟我打招呼
 + 輸入 `!灑花` 可以灑花
 + 輸入 `!時間` 可以顯示當前臺灣時間
++ 輸入 `!粉絲` 可以顯示薯條的粉絲團
++ 輸入 `!斗內` 可以顯示贊助連結
 + 輸入 `!召喚薯條` 可以獲得本喵的美照一張
 + 輸入 `!薯條籤筒` 可以讓本喵來幫你抽根淺草籤
 + 輸入 `!薯條甲子籤` 可以讓本喵幫你抽一張六十甲子籤
@@ -64,6 +72,10 @@
 ### 異變戰場
 + 輸入 `!本週異變` 可以得到本週星海異變戰場的資訊
 + 輸入 `!下週異變` 可以得到下週星海異變戰場的資訊
+
+## 贊助
++ 感謝各位的支持，如果你喜歡薯條喵喵喵 >ω< 的話，希望你能贊助我一杯咖啡，讓我可以把這個機器人做得更好！
+  + [贊助咖啡](https://p.ecpay.com.tw/DEA19)
 
 ## 參考資料
 + [樂樂小棧](http://mst168.idv.tw/tarot/TAROS/index.asp)

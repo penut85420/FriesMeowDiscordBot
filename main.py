@@ -1,11 +1,11 @@
 """
 Author: PenutChen
 """
-import asyncio
-import datetime
-import logging
-import random
 import re
+import random
+import asyncio
+import logging
+import datetime
 
 import discord
 from discord.ext import commands
@@ -13,16 +13,16 @@ from discord.ext.commands import CommandNotFound
 
 import modules.utils as btl
 from modules.dice import Dice
-from modules.easy_calculator import EasyCalculator
-from modules.fortune import FortuneMeow
-from modules.fries_summon import FriesSummoner
-from modules.sc_mutation import SC2Mutation
-from modules.tarot import TarotMeow
-from modules.template import ResponseTemplate
-from modules.twsc import TwscCalendar
 from modules.wikiman import WikiMan
-from modules.sixty_jiazi import SixtyJiazi
+from modules.tarot import TarotMeow
+from modules.twsc import TwscCalendar
 from modules.meow_talk import MeowTalk
+from modules.fortune import FortuneMeow
+from modules.sixty_jiazi import SixtyJiazi
+from modules.sc_mutation import SC2Mutation
+from modules.template import ResponseTemplate
+from modules.fries_summon import FriesSummoner
+from modules.easy_calculator import EasyCalculator
 
 # Modules
 bu = btl.BotUtils()
@@ -117,6 +117,24 @@ async def sprinkle(ctx, *args):
     msg = ['灑花 (\\*￣▽￣)/‧☆\\*"\\`\'\\*-.,_,.-\\*\'\\`"\\*-.,_☆'] * n
     msg = '\n'.join(msg)
     await ctx.send(msg)
+
+@bot.command(name='斗內', aliases=['贊助', '抖內', 'donate'])
+async def donate(ctx, *args):
+    msgs = [
+        '贊助我的奴僕一杯咖啡吧 ヽ(=^･ω･^=)丿',
+        '贊助我一個貓罐頭吧 ฅ(≚ᄌ≚)'
+    ]
+    url = 'https://p.ecpay.com.tw/DEA19'
+    await ctx.send(f'{random.choice(msgs)}\n{url}')
+
+@bot.command(name='粉絲', aliases=['fans', 'fb', 'ig'])
+async def fanpage(ctx, *args):
+    await ctx.send(
+        '薯條的臉書粉絲團\n'
+        '<https://www.facebook.com/FattyCatFries/>\n\n'
+        '薯條的 Instagram\n'
+        '<https://www.instagram.com/fatty_fries_cat/>'
+    )
 
 # Fries Commands
 
@@ -247,6 +265,7 @@ async def restart(ctx):
         return
     btl.restart_bot()
     await ctx.send('Wait...')
+    await bot.logout()
     await bot.close()
 
 
@@ -257,6 +276,7 @@ async def bye(ctx):
         return
     btl.shutdown_bot()
     await ctx.send('Bye!')
+    await bot.logout()
     await bot.close()
 
 
