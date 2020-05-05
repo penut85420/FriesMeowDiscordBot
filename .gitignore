@@ -8,7 +8,10 @@ fries_pictures/
 log/
 tools/
 
+.env
+.gitignore
 testing.py
+run_testing.py
 tmp
 push
 

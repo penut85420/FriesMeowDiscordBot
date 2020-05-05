@@ -45,7 +45,7 @@ class FriesBot(commands.Bot):
         bu.start_time = datetime.datetime.now()
         commands.Bot.__init__(self, **kwargs)
 
-    async def on_message(self, msg):
+    async def on_message(self, msg: discord.Message):
         if msg.author == self.user:
             return
 
@@ -60,10 +60,18 @@ class FriesBot(commands.Bot):
             if msg.guild.id not in self.ignore_channels:
                 if msg.content.startswith('!'):
                     self.msg_log.info(rt.get_response('msglog').format(msg))
+                if msg.content.startswith('！'):
+                    msg.content = '!' + msg.content[1:]
 
-        name_tag = f'<@!{self.user.id}>'
-        if msg.guild is None and not msg.content.startswith('!') or msg.content.startswith(name_tag):
+        if msg.guild is None and not msg.content.startswith('!') or self.user.mentioned_in(msg):
             self.msg_log.info(rt.get_response('msglog').format(msg))
+            async with msg.channel.typing():
+                try:
+                    emojis = '🤔😂😊🤣😍😘😁😉😎'
+                    await msg.add_reaction(random.choice(emojis))
+                except:
+                    pass
+                await asyncio.sleep(0.5)
             await msg.channel.send(mt.get_sent())
 
         await commands.Bot.on_message(self, msg)
