@@ -63,7 +63,7 @@ class FriesBot(commands.Bot):
                 if msg.content.startswith('！'):
                     msg.content = '!' + msg.content[1:]
 
-        if msg.guild is None and not msg.content.startswith('!') or self.user.mentioned_in(msg):
+        if msg.guild is None and not msg.content.startswith('!') or self.user in msg.mentions:
             self.msg_log.info(rt.get_response('msglog').format(msg))
             async with msg.channel.typing():
                 try:
@@ -173,16 +173,11 @@ async def summon(ctx, n=1):
         await send(file=discord.File(pic))
 
 
-@bot.command()
+@bot.command(aliases=['維基'])
 async def wiki(ctx, *args):
     msgs = wm.get_response(*args)
     for msg in msgs:
         await ctx.send(msg)
-
-
-@bot.command()
-async def say(ctx, *args):
-    await ctx.send(mt.get_sent())
 
 # StarCraft II Commands
 
@@ -207,13 +202,13 @@ async def mutation_next_week(ctx):
 # TRPG Commands
 
 
-@bot.command()
+@bot.command(aliases=['擲骰子'])
 async def dice(ctx, dice='', name=None):
     msg = '%s %s' % (btl.mk_mention(ctx), Dice.roller(dice, name))
     await ctx.send(msg)
 
 
-@bot.command()
+@bot.command(aliases=['薯條算數', '薯條算術'])
 async def calc(ctx, *args):
     msg = ec.calc(' '.join(args))
     await ctx.send(msg)
@@ -267,10 +262,10 @@ async def tarot_query(ctx, *args):
 
 
 @bot.command(aliases=['r'])
-async def restart(ctx):
+async def meow_restart(ctx):
     if not bu.is_dev(ctx):
-        await bu.not_dev_msg(ctx)
         return
+
     btl.restart_bot()
     await ctx.send('Wait...')
     await bot.logout()
@@ -278,10 +273,10 @@ async def restart(ctx):
 
 
 @bot.command()
-async def bye(ctx):
+async def meow_bye(ctx):
     if not bu.is_dev(ctx):
-        await bu.not_dev_msg(ctx)
         return
+
     btl.shutdown_bot()
     await ctx.send('Bye!')
     await bot.logout()
@@ -289,9 +284,8 @@ async def bye(ctx):
 
 
 @bot.command(aliases=['v'])
-async def version(ctx):
+async def meow_version(ctx):
     if not bu.is_dev(ctx):
-        await bu.not_dev_msg(ctx)
         return
 
     await ctx.send('Last build: %s' % bu.get_build_time())
