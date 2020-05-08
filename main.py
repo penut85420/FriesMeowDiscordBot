@@ -5,37 +5,29 @@ import re
 import random
 import asyncio
 import logging
+import hashlib
 import datetime
 
 import discord
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound
 
+import modules as fries
 import modules.utils as btl
-from modules.dice import Dice
-from modules.wikiman import WikiMan
-from modules.tarot import TarotMeow
-from modules.twsc import TwscCalendar
-from modules.meow_talk import MeowTalk
-from modules.fortune import FortuneMeow
-from modules.sixty_jiazi import SixtyJiazi
-from modules.sc_mutation import SC2Mutation
-from modules.template import ResponseTemplate
-from modules.fries_summon import FriesSummoner
-from modules.easy_calculator import EasyCalculator
 
 # Modules
 bu = btl.BotUtils()
-rt = ResponseTemplate()
-fs = FriesSummoner()
-fm = FortuneMeow()
-tm = TarotMeow()
-tc = TwscCalendar()
-sm = SC2Mutation()
-ec = EasyCalculator()
-wm = WikiMan()
-sj = SixtyJiazi()
-mt = MeowTalk()
+rt = fries.ResponseTemplate()
+fs = fries.FriesSummoner()
+fm = fries.FortuneMeow()
+tm = fries.TarotMeow()
+tc = fries.TwscCalendar()
+sm = fries.SC2Mutation()
+ec = fries.EasyCalculator()
+wm = fries.WikiMan()
+sj = fries.SixtyJiazi()
+mt = fries.MeowTalk()
+cb = fries.CrystalBallMeow()
 
 
 class FriesBot(commands.Bot):
@@ -215,6 +207,43 @@ async def calc(ctx, *args):
 
 # Fortune Commands
 
+@bot.command(name='薯條水晶球', aliases=['貓貓水晶球', '喵喵水晶球', 'crystal_ball'])
+async def crystal_ball(ctx, *args):
+    wish = ''
+    if args:
+        wish = ' '.join(args)
+        wish = btl.exchange_name(wish)
+    sent = f'{ctx.author.mention} 讓本喵來幫你看看{wish}'
+    msg = await ctx.channel.send(sent)
+    
+    await asyncio.sleep(1)
+    sent = f'{sent}\n喵喵喵，召喚水晶球 :crystal_ball:！'
+    await msg.edit(content=sent)
+
+    await asyncio.sleep(1)
+    sent = f'{sent}\n本喵從水晶球裡看到了，'
+    await msg.edit(content=sent)
+    
+    await asyncio.sleep(1)
+    sent = f'{sent}是「:{cb.get()}:」！'
+    await msg.edit(content=sent)
+
+@bot.command(name='薯條抽籤', aliases=['貓貓抽籤', '喵喵抽籤', 'draw'])
+async def draw(ctx, *args):
+    draw_name = ['大吉', '吉', '小吉', '小兇', '兇', '大凶']
+    
+    if not args:
+        r = random.choice(draw_name)
+    else:
+        m = hashlib.sha384()
+        ss = ''.join(ctx.message.content.split())
+        ts = datetime.datetime.now().strftime("%Y%m%d")
+        ss = f'{ss}{ctx.author.id}{ts}'
+        m.update(ss.encode())
+        r = sum([ord(ch) for ch in m.hexdigest()]) % len(draw_name)
+        r = draw_name[r]
+
+    await ctx.send(f'{ctx.author.mention} 抽到了「{r}」！')
 
 @bot.command(name='薯條籤筒', aliases=['貓貓籤筒', '喵喵籤筒', '薯條籤桶', '貓貓籤桶', '喵喵籤桶'])
 async def fortune(ctx):
