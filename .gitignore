@@ -11,6 +11,7 @@ tools/
 .env
 .gitignore
 testing.py
+testing2.py
 run_testing.py
 tmp
 push
@@ -18,3 +19,4 @@ push
 *.log
 *.pickle
 *.json
+.gitignore

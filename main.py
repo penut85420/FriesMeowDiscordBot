@@ -48,23 +48,17 @@ class FriesBot(commands.Bot):
             btl.shutdown_bot()
             await bot.close()
 
-        if msg.guild is not None:
-            if msg.guild.id not in self.ignore_channels:
-                if msg.content.startswith('!'):
-                    self.msg_log.info(rt.get_response('msglog').format(msg))
-                if msg.content.startswith('！'):
-                    msg.content = '!' + msg.content[1:]
+        if msg.content.startswith('！'):
+            msg.content = '!' + msg.content[1:]
 
-        if msg.guild is None and not msg.content.startswith('!') or self.user in msg.mentions:
+        if msg.content.startswith('!'):
+            log_type = 'msglog'
+            if msg.guild is not None:
+                log_type = 'msglog2'
+            self.msg_log.info(rt.get_response(log_type).format(msg))
+        elif self.user in msg.mentions or msg.guild is None:
             self.msg_log.info(rt.get_response('msglog').format(msg))
-            async with msg.channel.typing():
-                try:
-                    emojis = '🤔😂😊🤣😍😘😁😉😎'
-                    await msg.add_reaction(random.choice(emojis))
-                except:
-                    pass
-                await asyncio.sleep(0.5)
-            await msg.channel.send(mt.get_sent())
+            await chatting(msg)
 
         await commands.Bot.on_message(self, msg)
 
@@ -72,6 +66,15 @@ token = bu.get_token()
 activity = discord.Activity(name='奴僕清貓砂', type=discord.ActivityType.watching)
 bot = FriesBot(command_prefix='!', help_command=None, activity=activity)
 
+async def chatting(msg):
+    async with msg.channel.typing():
+        try:
+            emojis = '🤔😂😊🤣😍😘😁😉😎'
+            await msg.add_reaction(random.choice(emojis))
+        except:
+            pass
+        await asyncio.sleep(0.5)
+    await msg.channel.send(mt.get_sent())
 
 def log(msg):
     bot.msg_log.info(msg)
@@ -148,6 +151,9 @@ async def time(ctx):
 async def summon(ctx, n=1):
     n = int(n)
 
+    if n < 1:
+        n = 1
+
     send = ctx.send
 
     if n > 1:
@@ -215,7 +221,7 @@ async def crystal_ball(ctx, *args):
         wish = btl.exchange_name(wish)
     sent = f'{ctx.author.mention} 讓本喵來幫你看看{wish}'
     msg = await ctx.channel.send(sent)
-    
+
     await asyncio.sleep(1)
     sent = f'{sent}\n喵喵喵，召喚水晶球 :crystal_ball:！'
     await msg.edit(content=sent)
@@ -223,7 +229,7 @@ async def crystal_ball(ctx, *args):
     await asyncio.sleep(1)
     sent = f'{sent}\n本喵從水晶球裡看到了，'
     await msg.edit(content=sent)
-    
+
     await asyncio.sleep(1)
     sent = f'{sent}是「:{cb.get()}:」！'
     await msg.edit(content=sent)
@@ -231,7 +237,7 @@ async def crystal_ball(ctx, *args):
 @bot.command(name='薯條抽籤', aliases=['貓貓抽籤', '喵喵抽籤', 'draw'])
 async def draw(ctx, *args):
     draw_name = ['大吉', '吉', '小吉', '小兇', '兇', '大凶']
-    
+
     if not args:
         r = random.choice(draw_name)
     else:
