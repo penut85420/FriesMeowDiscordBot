@@ -28,7 +28,7 @@ wm = fries.WikiMan()
 sj = fries.SixtyJiazi()
 mt = fries.MeowTalk()
 cb = fries.CrystalBallMeow()
-
+Dice = fries.Dice
 
 class FriesBot(commands.Bot):
     def __init__(self, **kwargs):
