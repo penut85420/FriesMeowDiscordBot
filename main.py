@@ -164,11 +164,16 @@ async def summon(ctx, n=1):
     if n > 10:
         n = 10
         await send('%s 不可以一次召喚太多啊啊啊會壞掉啊啊啊啊啊' % btl.mk_mention(ctx))
-    else:
+    elif n > 1:
         await send('%s 熱騰騰的薯條來囉~' % btl.mk_mention(ctx))
-
-    for pic in fs.get_pictures(n):
-        await send(file=discord.File(pic))
+        for pic in fs.get_pictures(n):
+            await send(file=discord.File(pic))
+    else:
+        pic = [p for p in fs.get_pictures(1)]
+        await send(
+            '%s 熱騰騰的薯條來囉~' % btl.mk_mention(ctx),
+            file=discord.File(pic[0])
+        )
 
 
 @bot.command(aliases=['維基'])
@@ -214,11 +219,10 @@ async def calc(ctx, *args):
 # Fortune Commands
 
 @bot.command(name='薯條水晶球', aliases=['貓貓水晶球', '喵喵水晶球', 'crystal_ball'])
-async def crystal_ball(ctx, *args):
+async def crystal_ball(ctx, *, args):
     wish = ''
     if args:
-        wish = ' '.join(args)
-        wish = btl.exchange_name(wish)
+        wish = btl.exchange_name(args)
     sent = f'{ctx.author.mention} 讓本喵來幫你看看{wish}'
     msg = await ctx.channel.send(sent)
 
@@ -235,7 +239,7 @@ async def crystal_ball(ctx, *args):
     await msg.edit(content=sent)
 
 @bot.command(name='薯條抽籤', aliases=['貓貓抽籤', '喵喵抽籤', 'draw'])
-async def draw(ctx, *args):
+async def draw(ctx, *, args):
     draw_name = ['大吉', '吉', '小吉', '小兇', '兇', '大凶']
 
     if not args:
@@ -262,7 +266,7 @@ async def sixty_jiazi(ctx):
     await ctx.send(msg)
 
 @bot.command(name='薯條塔羅', aliases=['貓貓塔羅', '喵喵塔羅'])
-async def tarot(ctx, *args):
+async def tarot(ctx, *, args):
     n, has_num = btl.cast_int(args)
 
     send = ctx.send
@@ -285,8 +289,8 @@ async def tarot(ctx, *args):
 
 
 @bot.command(name='薯條解牌', aliases=['貓貓解牌', '喵喵解牌'])
-async def tarot_query(ctx, *args):
-    for query in args:
+async def tarot_query(ctx, *, args):
+    for query in args.split():
         msg, path = tm.query_card(query)
         if path:
             await ctx.send(msg, file=discord.File(path))
