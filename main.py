@@ -142,7 +142,7 @@ async def fanpage(ctx, *args):
 # Fries Commands
 
 
-@bot.command(name='時間', aliases=['time'])
+@bot.command(name='時間', aliases=['time', '薯條時間'])
 async def time(ctx):
     ts = datetime.datetime.now().strftime('%H:%M:%S')
     await ctx.send(f'喵喵喵，現在是臺灣時間 {ts}')
