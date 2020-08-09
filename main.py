@@ -219,7 +219,7 @@ async def calc(ctx, *args):
 # Fortune Commands
 
 @bot.command(name='薯條水晶球', aliases=['貓貓水晶球', '喵喵水晶球', 'crystal_ball'])
-async def crystal_ball(ctx, *, args):
+async def crystal_ball(ctx, *args):
     wish = ''
     if args:
         wish = btl.exchange_name(args)
@@ -239,7 +239,7 @@ async def crystal_ball(ctx, *, args):
     await msg.edit(content=sent)
 
 @bot.command(name='薯條抽籤', aliases=['貓貓抽籤', '喵喵抽籤', 'draw'])
-async def draw(ctx, *, args):
+async def draw(ctx, *args):
     draw_name = ['大吉', '吉', '小吉', '小兇', '兇', '大凶']
 
     if not args:
@@ -266,7 +266,7 @@ async def sixty_jiazi(ctx):
     await ctx.send(msg)
 
 @bot.command(name='薯條塔羅', aliases=['貓貓塔羅', '喵喵塔羅'])
-async def tarot(ctx, *, args):
+async def tarot(ctx, *args):
     n, has_num = btl.cast_int(args)
 
     send = ctx.send
@@ -287,9 +287,8 @@ async def tarot(ctx, *, args):
     for msg, path in tm.get_many_tarot(n):
         await send(msg, file=discord.File(path))
 
-
 @bot.command(name='薯條解牌', aliases=['貓貓解牌', '喵喵解牌'])
-async def tarot_query(ctx, *, args):
+async def tarot_query(ctx, *args):
     for query in args.split():
         msg, path = tm.query_card(query)
         if path:
