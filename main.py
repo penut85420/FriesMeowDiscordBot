@@ -222,6 +222,7 @@ async def calc(ctx, *args):
 async def crystal_ball(ctx, *args):
     wish = ''
     if args:
+        args = ' '.join(args)
         wish = btl.exchange_name(args)
     sent = f'{ctx.author.mention} 讓本喵來幫你看看{wish}'
     msg = await ctx.channel.send(sent)
