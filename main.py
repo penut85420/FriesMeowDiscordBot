@@ -144,8 +144,8 @@ async def fanpage(ctx, *args):
 
 @bot.command(name='時間', aliases=['time', '薯條時間'])
 async def time(ctx):
-    ts = datetime.datetime.now().strftime('%H:%M:%S')
-    await ctx.send(f'喵喵喵，現在是臺灣時間 {ts}')
+    ts = (datetime.datetime.utcnow() + datetime.timedelta(hours=8)).strftime('%H:%M:%S')
+    await ctx.send(f'喵喵喵，現在時間 {ts} (GMT+8)')
 
 @bot.command(name='召喚薯條', aliases=['召喚貓貓', '召喚喵喵'])
 async def summon(ctx, n=1):
