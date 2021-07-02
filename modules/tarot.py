@@ -1,6 +1,7 @@
 import json
 import random
 import re
+from loguru import logger
 
 
 KEY_REVERSED = ['positive', 'reversed']
