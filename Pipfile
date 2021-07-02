@@ -3,17 +3,11 @@ name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
 
-[dev-packages]
-pylint = "*"
-rope = "*"
-ipython = "*"
-
 [packages]
 discord-py = "*"
 google-api-python-client = "*"
 google-auth = "*"
 google-auth-oauthlib = "*"
 "discord.py" = "*"
-
-[requires]
-python_version = "3.7"
+loguru = "*"
+opencc = "*"

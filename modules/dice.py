@@ -1,6 +1,5 @@
 import random
 import re
-import unittest
 
 
 class DiceFormatError(Exception):

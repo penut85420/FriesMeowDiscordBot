@@ -1,4 +1,3 @@
-import os
 import random
 
 import modules.utils as btl

@@ -1,9 +1,7 @@
-import sys
-sys.path.append('..')
 import json
 import urllib
 import requests
-from zhhanz_conv import ZhhanzMan
+import opencc
 
 class WikiMan:
     def __init__(self):
@@ -11,7 +9,7 @@ class WikiMan:
             config = json.load(fin)
         self.wiki_url = config['wiki']
         self.query_page = config['query']
-        self.zhman = ZhhanzMan()
+        self.conv = opencc.OpenCC('s2twp.json')
 
     def query(self, term):
         term = self._encode(term)
@@ -24,13 +22,13 @@ class WikiMan:
         query_pages = list(query_results['query']['pages'].values())
         rtn_results = dict()
         for page in query_pages:
-            title = self.zhman.trans_s2t(page['title'])
+            title = self.conv.convert(page['title'])
             desc = page.get('description', None)
             if desc:
-                desc = self.zhman.trans_s2t(desc)
+                desc = self.conv.convert(desc)
             contents = page.get('extract', None)
             if contents:
-                contents = self.zhman.trans_s2t(contents)
+                contents = self.conv.convert(contents)
             rtn_results[title] = dict()
             rtn_results[title]['desc'] = desc
             rtn_results[title]['contents'] = contents
@@ -53,10 +51,3 @@ class WikiMan:
 
     def _encode(self, term):
         return urllib.parse.quote(term)
-
-
-if __name__ == '__main__':
-    terms = ['孫中山', '魔法少女小圓', 'AKB48']
-    wm = WikiMan()
-    for r in wm.get_response(*terms):
-        print(r)

@@ -1,7 +1,6 @@
 import json
 import os
 import random
-import unittest
 from os.path import join
 
 TEMPLATE_DIR_PATH = './template'

@@ -1,14 +1,13 @@
 """
 Author: PenutChen
 """
-import re
 import random
 import asyncio
-import logging
 import hashlib
 import datetime
 
 import discord
+from loguru import logger
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound
 
@@ -32,7 +31,6 @@ Dice = fries.Dice
 
 class FriesBot(commands.Bot):
     def __init__(self, **kwargs):
-        self.msg_log = logging.getLogger('fries.meow.friesbot')
         self.ignore_channels = bu.get_ignore_channels()
         bu.start_time = datetime.datetime.now()
         commands.Bot.__init__(self, **kwargs)
@@ -53,11 +51,11 @@ class FriesBot(commands.Bot):
 
         if msg.content.startswith('!'):
             log_type = 'msglog'
-            if msg.guild is not None:
+            if msg.guild is None:
                 log_type = 'msglog2'
-            self.msg_log.info(rt.get_response(log_type).format(msg))
+            logger.info(rt.get_response(log_type).format(msg))
         elif self.user in msg.mentions or msg.guild is None:
-            self.msg_log.info(rt.get_response('msglog').format(msg))
+            logger.info(rt.get_response('msglog').format(msg))
             await chatting(msg)
 
         await commands.Bot.on_message(self, msg)
@@ -76,21 +74,18 @@ async def chatting(msg):
         await asyncio.sleep(0.5)
     await msg.channel.send(mt.get_sent())
 
-def log(msg):
-    bot.msg_log.info(msg)
-
 # Events
 
 
 @bot.event
 async def on_ready():
-    log('Logged in as %s' % bot.user)
+    logger.info('Logged in as %s' % bot.user)
 
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, CommandNotFound):
         return
-    log(str(error).replace('\n', ' | '))
+    logger.info(str(error).replace('\n', ' | '))
 
 # Commands
 
@@ -181,26 +176,6 @@ async def wiki(ctx, *args):
     msgs = wm.get_response(*args)
     for msg in msgs:
         await ctx.send(msg)
-
-# StarCraft II Commands
-
-
-@bot.command(name='sc', aliases=['星海比賽', '星海賽事'])
-async def fight(ctx):
-    msg = rt.get_response('twsc', tc.get_recent_events())
-    await ctx.send(msg)
-
-
-@bot.command(name='本週異變', aliases=['本周異變', '異變', 'mutation'])
-async def mutation(ctx):
-    msg = sm.get_recent_stage()
-    await ctx.send(msg)
-
-
-@bot.command(name='下週異變', aliases=['下周異變', 'mutationnw'])
-async def mutation_next_week(ctx):
-    msg = sm.get_next_week_stage()
-    await ctx.send(msg)
 
 # TRPG Commands
 
@@ -300,17 +275,6 @@ async def tarot_query(ctx, *args):
 # Dev Commands
 
 
-@bot.command(aliases=['r'])
-async def meow_restart(ctx):
-    if not bu.is_dev(ctx):
-        return
-
-    btl.restart_bot()
-    await ctx.send('Wait...')
-    await bot.logout()
-    await bot.close()
-
-
 @bot.command()
 async def meow_bye(ctx):
     if not bu.is_dev(ctx):
@@ -318,7 +282,6 @@ async def meow_bye(ctx):
 
     btl.shutdown_bot()
     await ctx.send('Bye!')
-    await bot.logout()
     await bot.close()
 
 

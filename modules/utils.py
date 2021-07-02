@@ -1,33 +1,30 @@
-import datetime as dt
-import json
-import logging
 import os
+import sys
+import json
+import datetime as dt
 
-LOG_DIR = './log'
+from loguru import logger
 
-if not os.path.exists(LOG_DIR):
-    os.mkdir(LOG_DIR)
 
-log_filename = dt.datetime.now().strftime(
-    os.path.join(LOG_DIR, '%Y%m%d-%H%M%S.log'))
+def set_logger():
+    log_format = (
+        '{time:YYYY-MM-DD HH:mm:ss.SSSSSS} | '
+        '<lvl>{level: ^9}</lvl> | '
+        '{message}'
+    )
+    logger.add(sys.stderr, level='INFO', format=log_format)
+    logger.add(
+        f'./logs/system.log',
+        rotation='1 day',
+        retention='7 days',
+        level='INFO',
+        encoding='UTF-8',
+        compression='gz',
+        format=log_format
+    )
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s %(name)-20s\t%(levelname)-8s %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
-    handlers=[logging.FileHandler(log_filename, 'w', 'UTF-8'), ]
-)
-
-console = logging.StreamHandler()
-console.setLevel(logging.INFO)
-formatter = logging.Formatter(
-    '%(asctime)s %(name)-20s %(message)s', '%Y-%m-%d %H:%M:%S')
-console.setFormatter(formatter)
-clsfilter = logging.Filter('fries.meow')
-console.addFilter(clsfilter)
-logging.getLogger('').addHandler(console)
-sys_log = logging.getLogger('fries.meow.bot_util')
-sys_log.info('Logging initialize done')
+set_logger()
+logger.info('Logging initialize done')
 
 TMP_PATH = './config/tmp'
 CONFIG_PATH = './config/config.json'

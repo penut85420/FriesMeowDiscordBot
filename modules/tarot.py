@@ -1,7 +1,7 @@
 import json
-import logging
 import random
 import re
+
 
 KEY_REVERSED = ['positive', 'reversed']
 STR_REVERSED = ['正位', '逆位']
@@ -21,7 +21,6 @@ class TarotMeow:
     def __init__(self):
         with open('./data/tarot_cht.json', 'r', encoding='UTF-8') as fin:
             self.tarot = json.load(fin)
-        self.logger = logging.getLogger('fries.meow.tarot')
         self._init_query_dict()
 
     def get_tarot(self):
@@ -56,7 +55,7 @@ class TarotMeow:
         card = tarot[KEY_REVERSED[r]]
         msg = '**%s%s**\n\n' % (STR_REVERSED[r], tarot['name'])
         msg += self._parse_result_detail(card)
-        self.logger.info('Response %s%s' % (STR_REVERSED[r], tarot['name']))
+        logger.info('Response %s%s' % (STR_REVERSED[r], tarot['name']))
         return msg
 
     def _parse_result_detail(self, r):
