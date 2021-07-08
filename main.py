@@ -265,7 +265,7 @@ async def tarot(ctx, *args):
 
 @bot.command(name='薯條解牌', aliases=['貓貓解牌', '喵喵解牌'])
 async def tarot_query(ctx, *args):
-    for query in args.split():
+    for query in args:
         msg, path = tm.query_card(query)
         if path:
             await ctx.send(msg, file=discord.File(path))
