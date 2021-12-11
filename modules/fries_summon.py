@@ -5,7 +5,7 @@ import modules.utils as btl
 
 class FriesSummoner:
     def __init__(self):
-        self.origin_list = list(btl.load_json('config/links.json').values())
+        self.origin_list = list(btl.load_json('data/links.json').values())
         self._shuffle()
 
     def _shuffle(self):
