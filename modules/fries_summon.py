@@ -5,9 +5,7 @@ import modules.utils as btl
 
 class FriesSummoner:
     def __init__(self):
-        self.origin_list = list()
-        for fullPath, _ in btl.walk_dir('./fries_pictures'):
-            self.origin_list.append(fullPath)
+        self.origin_list = list(btl.load_json('config/links.json').values())
         self._shuffle()
 
     def _shuffle(self):

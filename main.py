@@ -150,25 +150,24 @@ async def summon(ctx, n=1):
         n = 1
 
     send = ctx.send
+    _mention = btl.mk_mention(ctx)
 
     if n > 1:
         if ctx.guild is not None:
-            await ctx.send('%s 召喚超過一張會改成私訊給你喔！' % btl.mk_mention(ctx))
+            await ctx.send(f'{_mention} 召喚超過一張會改成私訊給你喔！')
         send = ctx.author.send
+
+    async def _send():
+        for pic in fs.get_pictures(n):
+            await send(pic)
 
     if n > 10:
         n = 10
-        await send('%s 不可以一次召喚太多啊啊啊會壞掉啊啊啊啊啊' % btl.mk_mention(ctx))
-    elif n > 1:
-        await send('%s 熱騰騰的薯條來囉~' % btl.mk_mention(ctx))
-        for pic in fs.get_pictures(n):
-            await send(file=discord.File(pic))
+        await send(f'{_mention} 不可以一次召喚太多啊啊啊會壞掉啊啊啊啊啊')
     else:
-        pic = [p for p in fs.get_pictures(1)]
-        await send(
-            '%s 熱騰騰的薯條來囉~' % btl.mk_mention(ctx),
-            file=discord.File(pic[0])
-        )
+        await send(f'{_mention} 熱騰騰的薯條來囉~')
+
+    await _send()
 
 
 @bot.command(aliases=['維基'])
