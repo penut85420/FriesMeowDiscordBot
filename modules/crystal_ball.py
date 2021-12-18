@@ -2,6 +2,7 @@ import json
 import random
 import requests
 
+
 class CrystalBallMeow:
     def __init__(self):
         url = 'https://git.io/Jfcii'
@@ -10,6 +11,7 @@ class CrystalBallMeow:
 
     def get(self):
         return random.choice(self.emojis)
+
 
 if __name__ == "__main__":
     cbm = CrystalBallMeow()

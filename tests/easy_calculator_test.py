@@ -1,7 +1,7 @@
+from modules.easy_calculator import EasyCalculator
+from unittest import TestCase
 import sys
 sys.path.append('.')
-from unittest import TestCase
-from modules.easy_calculator import EasyCalculator
 
 
 class EasyCalculatorTest(TestCase):

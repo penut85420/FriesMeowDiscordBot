@@ -108,6 +108,7 @@ class TarotMeow:
         b = len(s1 | s2)
         return a / b
 
+
 if __name__ == '__main__':
     tm = TarotMeow()
     # print(tm.query)

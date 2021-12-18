@@ -4,7 +4,10 @@ import re
 class EasyCalculator:
     def __init__(self):
         self.legal = re.compile(r'^[\.\de\+\-\*/% \(\)]*$')
-        symbol_list = ['[\d]+e[\+\-][\d]+', '[\d\.]+', '\+', '\-', '\*', '/', '%', '\(', '\)']
+        symbol_list = [
+            '[\d]+e[\+\-][\d]+', '[\d\.]+',
+            '\+', '\-', '\*', '/', '%', '\(', '\)'
+        ]
         self.symbol = re.compile('(%s)' % '|'.join(symbol_list))
 
     def calc(self, expr):
@@ -54,6 +57,7 @@ class EasyCalculator:
     class DividByZero(Exception):
         def __str__(self):
             return '算式出現除以零的行為'
+
 
 if __name__ == "__main__":
     EC = EasyCalculator()

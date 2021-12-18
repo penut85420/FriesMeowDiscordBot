@@ -2,11 +2,9 @@ from . import utils
 from .dice import Dice
 from .wikiman import WikiMan
 from .tarot import TarotMeow
-from .twsc import TwscCalendar
 from .meow_talk import MeowTalk
 from .fortune import FortuneMeow
 from .sixty_jiazi import SixtyJiazi
-from .sc_mutation import SC2Mutation
 from .template import ResponseTemplate
 from .fries_summon import FriesSummoner
 from .easy_calculator import EasyCalculator

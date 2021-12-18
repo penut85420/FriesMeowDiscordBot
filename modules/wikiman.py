@@ -3,6 +3,7 @@ import urllib
 import requests
 import opencc
 
+
 class WikiMan:
     def __init__(self):
         with open('./data/wiki.json', 'r', encoding='UTF-8') as fin:

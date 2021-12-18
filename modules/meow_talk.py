@@ -1,5 +1,6 @@
 import random
 
+
 class MeowTalk:
     def __init__(self):
         self.end = [
@@ -48,6 +49,7 @@ class MeowTalk:
         p = [p + 1 for p in p]
 
         return p
+
 
 if __name__ == '__main__':
     mt = MeowTalk()

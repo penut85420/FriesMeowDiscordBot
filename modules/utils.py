@@ -23,6 +23,7 @@ def set_logger():
         format=log_format
     )
 
+
 set_logger()
 logger.info('Logging initialize done')
 
