@@ -24,7 +24,7 @@ class TarotMeow:
             self.tarot = json.load(fin)
         self._init_query_dict()
 
-    def get_tarot(self):
+    def get_single_tarot(self):
         i, r = self._get_tarot_info()
         return self._get_tarot_msg_path(i, r)
 
@@ -33,7 +33,7 @@ class TarotMeow:
         path = self._get_tarot_path(i, r)
         return msg, path
 
-    def get_many_tarot(self, n):
+    def get_tarots(self, n):
         if n > 156:
             n = 156
         if n < 1:

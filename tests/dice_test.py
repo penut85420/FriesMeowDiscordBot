@@ -1,4 +1,4 @@
-from fries.dice import Dice, DiceFormatError, DiceRangeError
+from fries.trpg.dice import Dice, DiceFormatError, DiceRangeError
 import unittest
 import sys
 sys.path.append('.')

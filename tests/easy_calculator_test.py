@@ -1,4 +1,4 @@
-from fries.easy_calculator import EasyCalculator
+from fries.trpg.easy_calculator import EasyCalculator
 from unittest import TestCase
 import sys
 sys.path.append('.')

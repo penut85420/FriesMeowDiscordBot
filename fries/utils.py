@@ -24,6 +24,7 @@ def set_logger():
 
 
 set_logger()
+logger.info('Logger Init Done')
 
 TMP_PATH = './config/tmp'
 CONFIG_PATH = './config/config.json'
@@ -71,10 +72,7 @@ def exchange_name(msg):
     return msg
 
 
-class BotUtils:
-    def __init__(self):
-        self.config = load_config()
-
-    def get_token(self):
-        token_key = 'token_test' if self.config['is_debug'] else 'token'
-        return self.config[token_key]
+def get_token():
+    config = load_config()
+    token_key = 'token_dev' if config['is_dev'] else 'token_release'
+    return config[token_key]
