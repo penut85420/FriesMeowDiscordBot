@@ -11,21 +11,23 @@ from loguru import logger
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound
 
-import fries as fries
-import fries.utils as btl
+from fries import (
+    BotUtils, ResponseTemplate, FriesSummoner, FortuneMeow,
+    TarotMeow, EasyCalculator, WikiMan, SixtyJiazi, MeowTalk,
+    CrystalBallMeow, Dice, exchange_name, to_int
+)
 
 # Modules
-bu = btl.BotUtils()
-rt = fries.ResponseTemplate()
-fs = fries.FriesSummoner()
-fm = fries.FortuneMeow()
-tm = fries.TarotMeow()
-ec = fries.EasyCalculator()
-wm = fries.WikiMan()
-sj = fries.SixtyJiazi()
-mt = fries.MeowTalk()
-cb = fries.CrystalBallMeow()
-Dice = fries.Dice
+bu = BotUtils()
+rt = ResponseTemplate()
+fs = FriesSummoner()
+fm = FortuneMeow()
+tm = TarotMeow()
+ec = EasyCalculator()
+wm = WikiMan()
+sj = SixtyJiazi()
+mt = MeowTalk()
+cb = CrystalBallMeow()
 
 
 class FriesBot(commands.Bot):
@@ -45,9 +47,9 @@ class FriesBot(commands.Bot):
             log_type = 'msglog'
             if msg.guild is None:
                 log_type = 'msglog2'
-            logger.info(rt.get_response(log_type).format(msg))
+            logger.info(rt.get_resp(log_type).format(msg))
         elif self.user in msg.mentions or msg.guild is None:
-            logger.info(rt.get_response('msglog').format(msg))
+            logger.info(rt.get_resp('msglog').format(msg))
             await chatting(msg)
 
         await commands.Bot.on_message(self, msg)
@@ -87,16 +89,16 @@ async def on_command_error(_, error):
 
 @bot.command(name='help', aliases=['喵'])
 async def help(ctx):
-    msg = rt.get_response('help')
+    msg = rt.get_resp('help')
     await ctx.send(msg)
 
 
 @bot.command(aliases=['哈囉'])
 async def hello(ctx, *_):
     try:
-        msg = rt.get_response('hello', ctx.author.nick or ctx.author.name)
+        msg = rt.get_resp('hello', ctx.author.nick or ctx.author.name)
     except:
-        msg = rt.get_response('hello', ctx.author.name)
+        msg = rt.get_resp('hello', ctx.author.name)
     await ctx.send(msg)
 
 
@@ -198,7 +200,7 @@ async def crystal_ball(ctx, *args):
     wish = ''
     if args:
         args = ' '.join(args)
-        wish = btl.exchange_name(args)
+        wish = exchange_name(args)
     sent = f'{ctx.author.mention} 讓本喵來幫你看看{wish}'
     msg = await ctx.channel.send(sent)
 
@@ -222,12 +224,11 @@ async def draw(ctx, *args):
     if not args:
         r = random.choice(draw_name)
     else:
-        m = hashlib.sha384()
         ss = ''.join(ctx.message.content.split())
         ts = datetime.datetime.now().strftime("%Y%m%d")
         ss = f'{ss}{ctx.author.id}{ts}'
-        m.update(ss.encode())
-        r = sum([ord(ch) for ch in m.hexdigest()]) % len(draw_name)
+        m = hashlib.sha384(ss.encode()).hexdigest()
+        r = sum([ord(ch) for ch in m]) % len(draw_name)
         r = draw_name[r]
 
     await ctx.send(f'{ctx.author.mention} 抽到了「{r}」！')
@@ -235,7 +236,7 @@ async def draw(ctx, *args):
 
 @bot.command(name='薯條籤筒', aliases=['貓貓籤筒', '喵喵籤筒', '薯條籤桶', '貓貓籤桶', '喵喵籤桶'])
 async def fortune(ctx):
-    msg = rt.get_response('fortune', ctx.author.mention, fm.get_fortune())
+    msg = rt.get_resp('fortune', ctx.author.mention, fm.get_fortune())
     await ctx.send(msg)
 
 
@@ -246,7 +247,7 @@ async def sixty_jiazi(ctx):
 
 @bot.command(name='薯條塔羅', aliases=['貓貓塔羅', '喵喵塔羅'])
 async def tarot(ctx, *args):
-    n, has_num = btl.cast_int(args)
+    n, has_num = to_int(args)
 
     send = ctx.send
     mention = ctx.author.mention
@@ -258,7 +259,7 @@ async def tarot(ctx, *args):
 
     if len(args) > has_num:
         wish = ' '.join(args[has_num:])
-        wish = btl.exchange_name(wish)
+        wish = exchange_name(wish)
         msg = f'{mention} 讓本喵來占卜看看 {wish} ლ(́◕◞౪◟◕‵ლ)'
     else:
         msg = f'{mention} 讓本喵來幫你抽個 ლ(́◕◞౪◟◕‵ლ)'

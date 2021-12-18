@@ -10,7 +10,7 @@ class ResponseTemplate:
     def __init__(self):
         self.load()
 
-    def get_response(self, key, *args):
+    def get_resp(self, key, *args):
         tmp = self.template.get(key, None)
         if not tmp:
             return None
@@ -40,5 +40,5 @@ class ResponseTemplate:
 
 if __name__ == '__main__':
     rt = ResponseTemplate()
-    print(rt.get_response('hello', '大歐派蘿莉'))
+    print(rt.get_resp('hello', '大歐派蘿莉'))
     # print(rt.get_response('twsc', 'Hello'))
