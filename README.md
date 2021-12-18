@@ -1,6 +1,5 @@
 # 薯條喵喵喵 >ω< Discord Bot
 
-[![Build Status](https://travis-ci.org/penut85420/FriesMeowDiscordBot.svg?branch=master)](https://travis-ci.org/penut85420/FriesMeowDiscordBot)
 [![Discord Bots](https://top.gg/api/widget/status/347020077398229003.svg)](https://top.gg/bot/347020077398229003)
 
 ## 簡介
