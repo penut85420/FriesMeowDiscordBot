@@ -1,7 +1,6 @@
 import os
 import sys
 import json
-import datetime as dt
 
 from loguru import logger
 
@@ -25,7 +24,6 @@ def set_logger():
 
 
 set_logger()
-logger.info('Logging initialize done')
 
 TMP_PATH = './config/tmp'
 CONFIG_PATH = './config/config.json'
@@ -76,23 +74,7 @@ def exchange_name(msg):
 class BotUtils:
     def __init__(self):
         self.config = load_config()
-        self.restart_channel = self.config['restart_channel']
-        self.start_time = dt.datetime.now()
-        self.config['is_debug'] = self.config['is_debug'] == "True"
-        self.dev_id_dict = dict()
-        for dev_id in [int(line) for line in self.config['dev_id']]:
-            self.dev_id_dict[dev_id] = True
-
-    def is_dev(self, ctx):
-        user_id = ctx.author.id
-        return self.dev_id_dict.get(user_id, False)
 
     def get_token(self):
         token_key = 'token_test' if self.config['is_debug'] else 'token'
         return self.config[token_key]
-
-    def get_build_time(self):
-        return self.start_time.strftime('%Y-%m-%d %H:%M:%S')
-
-    async def not_dev_msg(self, ctx):
-        await ctx.send('%s 你不是開發人員，不能用這個指令 (((ﾟдﾟ)))' % ctx.author.name)

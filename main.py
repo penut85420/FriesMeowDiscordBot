@@ -4,7 +4,7 @@ Author: PenutChen
 import random
 import asyncio
 import hashlib
-import datetime
+import datetime as dt
 
 import discord
 from loguru import logger
@@ -32,7 +32,6 @@ crystal = CrystalBallMeow()
 
 class FriesBot(commands.Bot):
     def __init__(self, **kwargs):
-        utils.start_time = datetime.datetime.now()
         commands.Bot.__init__(self, **kwargs)
 
     async def on_message(self, msg: discord.Message):
@@ -54,7 +53,6 @@ class FriesBot(commands.Bot):
         await commands.Bot.on_message(self, msg)
 
 
-token = utils.get_token()
 activity = discord.Activity(name='奴僕清貓砂', type=discord.ActivityType.watching)
 bot = FriesBot(command_prefix='!', help_command=None, activity=activity)
 
@@ -103,16 +101,13 @@ async def hello(ctx, *_):
 
 @bot.command(name='灑花', aliases=['撒花'])
 async def sprinkle(ctx, *args):
-    try:
-        n = int(args[0])
-    except:
-        n = 1
-    if n < 1:
-        n = 1
-    if n > 5:
-        n = 5
+    n, _ = to_int(args[0])
+    n = 1 if n < 1 else n
+    n = 5 if n > 5 else n
+
     msg = ['灑花 (\\*￣▽￣)/‧☆\\*"\\`\'\\*-.,_,.-\\*\'\\`"\\*-.,_☆'] * n
     msg = '\n'.join(msg)
+
     await ctx.send(msg)
 
 
@@ -140,7 +135,7 @@ async def fanpage(ctx, *_):
 
 @bot.command(name='時間', aliases=['time', '薯條時間'])
 async def time(ctx):
-    ts = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
+    ts = dt.datetime.utcnow() + dt.timedelta(hours=8)
     ts = ts.strftime('%H:%M:%S')
     await ctx.send(f'喵喵喵，現在時間 {ts} (GMT+8)')
 
@@ -224,7 +219,7 @@ async def draw(ctx, *args):
         r = random.choice(draw_name)
     else:
         ss = ''.join(ctx.message.content.split())
-        ts = datetime.datetime.now().strftime("%Y%m%d")
+        ts = dt.datetime.now().strftime("%Y%m%d")
         ss = f'{ss}{ctx.author.id}{ts}'
         m = hashlib.sha384(ss.encode()).hexdigest()
         r = sum([ord(ch) for ch in m]) % len(draw_name)
@@ -235,8 +230,9 @@ async def draw(ctx, *args):
 
 @bot.command(name='薯條籤筒', aliases=['貓貓籤筒', '喵喵籤筒', '薯條籤桶', '貓貓籤桶', '喵喵籤桶'])
 async def fortune(ctx):
-    msg = resp.get_resp('fortune', ctx.author.mention,
-                        fortune_meow.get_fortune())
+    msg = resp.get_resp(
+        'fortune', ctx.author.mention,
+        fortune_meow.get_fortune())
     await ctx.send(msg)
 
 
@@ -279,4 +275,4 @@ async def tarot_query(ctx, *args):
             await ctx.send(msg)
 
 if __name__ == "__main__":
-    bot.run(token)
+    bot.run(utils.get_token())
