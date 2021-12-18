@@ -1,6 +1,6 @@
 import random
 
-import modules.utils as btl
+import fries.utils as btl
 
 
 class FriesSummoner:

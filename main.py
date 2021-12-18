@@ -11,8 +11,8 @@ from loguru import logger
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound
 
-import modules as fries
-import modules.utils as btl
+import fries as fries
+import fries.utils as btl
 
 # Modules
 bu = btl.BotUtils()
