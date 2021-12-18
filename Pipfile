@@ -4,10 +4,10 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [packages]
-discord-py = "*"
-google-api-python-client = "*"
-google-auth = "*"
-google-auth-oauthlib = "*"
-"discord.py" = "*"
 loguru = "*"
 opencc = "*"
+py-cord = "*"
+requests = "*"
+
+[dev-packages]
+autopep8 = "*"
