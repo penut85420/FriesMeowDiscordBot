@@ -18,22 +18,21 @@ from fries import (
 )
 
 # Modules
-bu = BotUtils()
-rt = ResponseTemplate()
-fs = FriesSummoner()
-fm = FortuneMeow()
-tm = TarotMeow()
-ec = EasyCalculator()
-wm = WikiMan()
-sj = SixtyJiazi()
-mt = MeowTalk()
-cb = CrystalBallMeow()
+utils = BotUtils()
+resp = ResponseTemplate()
+fries_summoner = FriesSummoner()
+fortune_meow = FortuneMeow()
+tarot_meow = TarotMeow()
+calculator = EasyCalculator()
+wiki = WikiMan()
+sixty_jiazi = SixtyJiazi()
+meow_talk = MeowTalk()
+crystal = CrystalBallMeow()
 
 
 class FriesBot(commands.Bot):
     def __init__(self, **kwargs):
-        self.ignore_channels = bu.get_ignore_channels()
-        bu.start_time = datetime.datetime.now()
+        utils.start_time = datetime.datetime.now()
         commands.Bot.__init__(self, **kwargs)
 
     async def on_message(self, msg: discord.Message):
@@ -47,15 +46,15 @@ class FriesBot(commands.Bot):
             log_type = 'msglog'
             if msg.guild is None:
                 log_type = 'msglog2'
-            logger.info(rt.get_resp(log_type).format(msg))
+            logger.info(resp.get_resp(log_type).format(msg))
         elif self.user in msg.mentions or msg.guild is None:
-            logger.info(rt.get_resp('msglog').format(msg))
+            logger.info(resp.get_resp('msglog').format(msg))
             await chatting(msg)
 
         await commands.Bot.on_message(self, msg)
 
 
-token = bu.get_token()
+token = utils.get_token()
 activity = discord.Activity(name='奴僕清貓砂', type=discord.ActivityType.watching)
 bot = FriesBot(command_prefix='!', help_command=None, activity=activity)
 
@@ -68,7 +67,7 @@ async def chatting(msg):
         except:
             pass
         await asyncio.sleep(0.5)
-    await msg.channel.send(mt.get_sent())
+    await msg.channel.send(meow_talk.get_sent())
 
 # Events
 
@@ -89,16 +88,16 @@ async def on_command_error(_, error):
 
 @bot.command(name='help', aliases=['喵'])
 async def help(ctx):
-    msg = rt.get_resp('help')
+    msg = resp.get_resp('help')
     await ctx.send(msg)
 
 
 @bot.command(aliases=['哈囉'])
 async def hello(ctx, *_):
     try:
-        msg = rt.get_resp('hello', ctx.author.nick or ctx.author.name)
+        msg = resp.get_resp('hello', ctx.author.nick or ctx.author.name)
     except:
-        msg = rt.get_resp('hello', ctx.author.name)
+        msg = resp.get_resp('hello', ctx.author.name)
     await ctx.send(msg)
 
 
@@ -160,7 +159,7 @@ async def summon(ctx, n=1):
         send = ctx.author.send
 
     async def _send():
-        for pic in fs.get_pictures(n):
+        for pic in fries_summoner.get_pictures(n):
             await send(pic)
 
     if n > 10:
@@ -174,7 +173,7 @@ async def summon(ctx, n=1):
 
 @bot.command(aliases=['維基'])
 async def wiki(ctx, *args):
-    msgs = wm.get_response(*args)
+    msgs = wiki.get_response(*args)
     for msg in msgs:
         await ctx.send(msg)
 
@@ -189,7 +188,7 @@ async def dice(ctx, dice='', name=None):
 
 @bot.command(aliases=['薯條算數', '薯條算術'])
 async def calc(ctx, *args):
-    msg = ec.calc(' '.join(args))
+    msg = calculator.calc(' '.join(args))
     await ctx.send(msg)
 
 # Fortune Commands
@@ -213,7 +212,7 @@ async def crystal_ball(ctx, *args):
     await msg.edit(content=sent)
 
     await asyncio.sleep(1)
-    sent = f'{sent}是「:{cb.get()}:」！'
+    sent = f'{sent}是「:{crystal.get()}:」！'
     await msg.edit(content=sent)
 
 
@@ -236,13 +235,14 @@ async def draw(ctx, *args):
 
 @bot.command(name='薯條籤筒', aliases=['貓貓籤筒', '喵喵籤筒', '薯條籤桶', '貓貓籤桶', '喵喵籤桶'])
 async def fortune(ctx):
-    msg = rt.get_resp('fortune', ctx.author.mention, fm.get_fortune())
+    msg = resp.get_resp('fortune', ctx.author.mention,
+                        fortune_meow.get_fortune())
     await ctx.send(msg)
 
 
 @bot.command(name='薯條甲子籤', aliases=['貓貓甲子籤', '喵喵甲子籤'])
 async def sixty_jiazi(ctx):
-    await ctx.send(sj.pick())
+    await ctx.send(sixty_jiazi.pick())
 
 
 @bot.command(name='薯條塔羅', aliases=['貓貓塔羅', '喵喵塔羅'])
@@ -265,14 +265,14 @@ async def tarot(ctx, *args):
         msg = f'{mention} 讓本喵來幫你抽個 ლ(́◕◞౪◟◕‵ლ)'
     await send(msg)
 
-    for msg, path in tm.get_many_tarot(n):
+    for msg, path in tarot_meow.get_many_tarot(n):
         await send(msg, file=discord.File(path))
 
 
 @bot.command(name='薯條解牌', aliases=['貓貓解牌', '喵喵解牌'])
 async def tarot_query(ctx, *args):
     for query in args:
-        msg, path = tm.query_card(query)
+        msg, path = tarot_meow.query_card(query)
         if path:
             await ctx.send(msg, file=discord.File(path))
         else:

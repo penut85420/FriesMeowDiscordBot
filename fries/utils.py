@@ -91,9 +91,6 @@ class BotUtils:
         token_key = 'token_test' if self.config['is_debug'] else 'token'
         return self.config[token_key]
 
-    def get_ignore_channels(self):
-        return self.config['ignore_channels']
-
     def get_build_time(self):
         return self.start_time.strftime('%Y-%m-%d %H:%M:%S')
 
