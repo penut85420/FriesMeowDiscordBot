@@ -46,24 +46,11 @@ def walk_dir(dir_path):
             yield fullPath, fileName
 
 
-def cast_int(args):
+def to_int(args):
     try:
         return int(args[0]), 1
     except:
         return 1, 0
-
-
-def write_file(file_path, contents):
-    with open(file_path, 'w', encoding='UTF-8') as fout:
-        fout.write(contents)
-
-
-def restart_bot():
-    write_file(TMP_PATH, '0')
-
-
-def shutdown_bot():
-    write_file(TMP_PATH, '1')
 
 
 def exchange_name(msg):

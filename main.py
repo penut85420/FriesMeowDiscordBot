@@ -38,13 +38,6 @@ class FriesBot(commands.Bot):
         if msg.author == self.user:
             return
 
-        if msg.content == '!r' and msg.channel.id == bu.restart_channel:
-            btl.restart_bot()
-            await bot.close()
-        elif msg.content == '!bye' and msg.channel.id == bu.restart_channel:
-            btl.shutdown_bot()
-            await bot.close()
-
         if msg.content.startswith('！'):
             msg.content = '!' + msg.content[1:]
 
@@ -80,7 +73,7 @@ async def chatting(msg):
 
 @bot.event
 async def on_ready():
-    logger.info('Logged in as %s' % bot.user)
+    logger.info(f'{bot.user} | Ready')
 
 
 @bot.event
@@ -283,26 +276,6 @@ async def tarot_query(ctx, *args):
             await ctx.send(msg, file=discord.File(path))
         else:
             await ctx.send(msg)
-
-# Dev Commands
-
-
-@bot.command()
-async def meow_bye(ctx):
-    if not bu.is_dev(ctx):
-        return
-
-    btl.shutdown_bot()
-    await ctx.send('Bye!')
-    await bot.close()
-
-
-@bot.command(aliases=['v'])
-async def meow_version(ctx):
-    if not bu.is_dev(ctx):
-        return
-
-    await ctx.send('Last build: %s' % bu.get_build_time())
 
 if __name__ == "__main__":
     bot.run(token)
