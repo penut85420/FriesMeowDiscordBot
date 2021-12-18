@@ -20,14 +20,13 @@ rt = fries.ResponseTemplate()
 fs = fries.FriesSummoner()
 fm = fries.FortuneMeow()
 tm = fries.TarotMeow()
-tc = fries.TwscCalendar()
-sm = fries.SC2Mutation()
 ec = fries.EasyCalculator()
 wm = fries.WikiMan()
 sj = fries.SixtyJiazi()
 mt = fries.MeowTalk()
 cb = fries.CrystalBallMeow()
 Dice = fries.Dice
+
 
 class FriesBot(commands.Bot):
     def __init__(self, **kwargs):
@@ -60,9 +59,11 @@ class FriesBot(commands.Bot):
 
         await commands.Bot.on_message(self, msg)
 
+
 token = bu.get_token()
 activity = discord.Activity(name='奴僕清貓砂', type=discord.ActivityType.watching)
 bot = FriesBot(command_prefix='!', help_command=None, activity=activity)
+
 
 async def chatting(msg):
     async with msg.channel.typing():
@@ -80,6 +81,7 @@ async def chatting(msg):
 @bot.event
 async def on_ready():
     logger.info('Logged in as %s' % bot.user)
+
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -104,17 +106,21 @@ async def hello(ctx, *args):
         msg = rt.get_response('hello', ctx.author.name)
     await ctx.send(msg)
 
+
 @bot.command(name='灑花', aliases=['撒花'])
 async def sprinkle(ctx, *args):
     try:
         n = int(args[0])
     except:
         n = 1
-    if n < 1: n = 1
-    if n > 5: n = 5
+    if n < 1:
+        n = 1
+    if n > 5:
+        n = 5
     msg = ['灑花 (\\*￣▽￣)/‧☆\\*"\\`\'\\*-.,_,.-\\*\'\\`"\\*-.,_☆'] * n
     msg = '\n'.join(msg)
     await ctx.send(msg)
+
 
 @bot.command(name='斗內', aliases=['贊助', '抖內', 'donate'])
 async def donate(ctx, *args):
@@ -124,6 +130,7 @@ async def donate(ctx, *args):
     ]
     url = 'https://p.ecpay.com.tw/DEA19'
     await ctx.send(f'{random.choice(msgs)}\n{url}')
+
 
 @bot.command(name='粉絲', aliases=['fans', 'fb', 'ig'])
 async def fanpage(ctx, *args):
@@ -139,8 +146,10 @@ async def fanpage(ctx, *args):
 
 @bot.command(name='時間', aliases=['time', '薯條時間'])
 async def time(ctx):
-    ts = (datetime.datetime.utcnow() + datetime.timedelta(hours=8)).strftime('%H:%M:%S')
+    ts = (datetime.datetime.utcnow() +
+          datetime.timedelta(hours=8)).strftime('%H:%M:%S')
     await ctx.send(f'喵喵喵，現在時間 {ts} (GMT+8)')
+
 
 @bot.command(name='召喚薯條', aliases=['召喚貓貓', '召喚喵喵'])
 async def summon(ctx, n=1):
@@ -192,6 +201,7 @@ async def calc(ctx, *args):
 
 # Fortune Commands
 
+
 @bot.command(name='薯條水晶球', aliases=['貓貓水晶球', '喵喵水晶球', 'crystal_ball'])
 async def crystal_ball(ctx, *args):
     wish = ''
@@ -213,6 +223,7 @@ async def crystal_ball(ctx, *args):
     sent = f'{sent}是「:{cb.get()}:」！'
     await msg.edit(content=sent)
 
+
 @bot.command(name='薯條抽籤', aliases=['貓貓抽籤', '喵喵抽籤', 'draw'])
 async def draw(ctx, *args):
     draw_name = ['大吉', '吉', '小吉', '小兇', '兇', '大凶']
@@ -230,15 +241,18 @@ async def draw(ctx, *args):
 
     await ctx.send(f'{ctx.author.mention} 抽到了「{r}」！')
 
+
 @bot.command(name='薯條籤筒', aliases=['貓貓籤筒', '喵喵籤筒', '薯條籤桶', '貓貓籤桶', '喵喵籤桶'])
 async def fortune(ctx):
     msg = rt.get_response('fortune', btl.mk_mention(ctx), fm.get_fortune())
     await ctx.send(msg)
 
+
 @bot.command(name='薯條甲子籤', aliases=['貓貓甲子籤', '喵喵甲子籤'])
 async def sixty_jiazi(ctx):
     msg = sj.pick()
     await ctx.send(msg)
+
 
 @bot.command(name='薯條塔羅', aliases=['貓貓塔羅', '喵喵塔羅'])
 async def tarot(ctx, *args):
@@ -261,6 +275,7 @@ async def tarot(ctx, *args):
 
     for msg, path in tm.get_many_tarot(n):
         await send(msg, file=discord.File(path))
+
 
 @bot.command(name='薯條解牌', aliases=['貓貓解牌', '喵喵解牌'])
 async def tarot_query(ctx, *args):
