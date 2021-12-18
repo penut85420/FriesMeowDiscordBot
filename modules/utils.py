@@ -35,10 +35,6 @@ def load_config():
     return load_json(CONFIG_PATH)
 
 
-def mk_mention(ctx):
-    return '<@%s>' % ctx.author.id
-
-
 def load_json(file_path):
     return json.load(open(file_path, 'r', encoding='UTF-8'))
 
