@@ -1,7 +1,5 @@
 from fries.trpg.easy_calculator import EasyCalculator
 from unittest import TestCase
-import sys
-sys.path.append('.')
 
 
 class EasyCalculatorTest(TestCase):
