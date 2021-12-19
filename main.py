@@ -8,7 +8,7 @@ import random
 
 import discord
 
-from fries import FriesBot, exchange_name, to_int, get_token
+from fries import FriesBot, exchange_name, to_int, get_token, set_logger
 
 
 bot = FriesBot()
@@ -201,4 +201,5 @@ async def tarot_query(ctx, *args):
             await ctx.send(msg)
 
 if __name__ == "__main__":
+    set_logger()
     bot.run(get_token())

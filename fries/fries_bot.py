@@ -5,15 +5,15 @@ import discord
 from discord.ext.commands import Bot, CommandNotFound
 from loguru import logger
 
-from fries import (
-    CrystalBallMeow, Dice, EasyCalculator,
-    FortuneMeow, FriesSummoner, MeowTalk,
-    ResponseTemplate, SixtyJiazi, TarotMeow, WikiMan
-)
-
 
 class FriesBot(Bot):
     def __init__(self, **kwargs):
+        from fries import (
+            CrystalBallMeow, Dice, EasyCalculator,
+            FortuneMeow, FriesSummoner, MeowTalk,
+            ResponseTemplate, SixtyJiazi, TarotMeow, WikiMan
+        )
+        self.dice = Dice
         self.resp_template = ResponseTemplate()
         self.meow_talk = MeowTalk()
         self.fries_summoner = FriesSummoner()
@@ -86,7 +86,7 @@ class FriesBot(Bot):
         return self.crystal.get()
 
     def roll_dice(self, dice, name):
-        return Dice.roller(dice, name)
+        return self.dice.roller(dice, name)
 
     async def chatting(self, msg):
         async with msg.channel.typing():

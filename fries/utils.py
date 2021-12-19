@@ -4,6 +4,7 @@ import json
 
 from loguru import logger
 
+CONFIG_PATH = 'config/config.json'
 
 def set_logger():
     log_format = (
@@ -13,7 +14,7 @@ def set_logger():
     )
     logger.add(sys.stderr, level='INFO', format=log_format)
     logger.add(
-        f'./logs/system.log',
+        f'logs/system.log',
         rotation='1 day',
         retention='7 days',
         level='INFO',
@@ -21,14 +22,6 @@ def set_logger():
         compression='gz',
         format=log_format
     )
-
-
-set_logger()
-logger.info('Logger Init Done')
-
-TMP_PATH = './config/tmp'
-CONFIG_PATH = './config/config.json'
-
 
 def load_config():
     return load_json(CONFIG_PATH)
