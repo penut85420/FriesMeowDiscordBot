@@ -8,10 +8,10 @@ import random
 
 import discord
 
-from fries import FriesBot, exchange_name, to_int, get_token, set_logger
+from fries import FriesBot, exchange_name, get_token, set_logger
 
 
-bot = FriesBot(debug_guilds=[584999036248129556])
+bot = FriesBot()
 # Commands
 
 
