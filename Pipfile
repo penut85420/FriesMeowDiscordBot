@@ -10,4 +10,4 @@ py-cord = "*"
 requests = "*"
 
 [dev-packages]
-autopep8 = "*"
+black = "*"

@@ -2,7 +2,8 @@ import asyncio
 import random
 
 import discord
-from discord.ext.commands import Bot, CommandNotFound
+from discord import Bot
+from discord.ext.commands import CommandNotFound
 from loguru import logger
 
 
