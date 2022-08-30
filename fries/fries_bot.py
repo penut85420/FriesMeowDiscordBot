@@ -2,12 +2,11 @@ import asyncio
 import random
 
 import discord
-from discord import Bot
-from discord.ext.commands import CommandNotFound
+from discord.ext.commands import CommandNotFound, AutoShardedBot
 from loguru import logger
 
 
-class FriesBot(Bot):
+class FriesBot(AutoShardedBot):
     def __init__(self, **kwargs):
         from fries import (
             CrystalBallMeow, Dice, EasyCalculator,
@@ -28,7 +27,7 @@ class FriesBot(Bot):
         activity = discord.Activity(
             name='奴僕清貓砂', type=discord.ActivityType.watching)
 
-        Bot.__init__(
+        AutoShardedBot.__init__(
             self, command_prefix='!',
             help_command=None, activity=activity, **kwargs
         )
@@ -49,7 +48,7 @@ class FriesBot(Bot):
             logger.info(self.resp('msglog').format(msg))
             await self.chatting(msg)
 
-        await Bot.on_message(self, msg)
+        await AutoShardedBot.on_message(self, msg)
 
     async def on_ready(self):
         logger.info(f'{self.user} | Ready')
