@@ -4,15 +4,24 @@ import random
 import discord
 from discord.ext.commands import CommandNotFound, AutoShardedBot
 from loguru import logger
+from .utils import get_debug_guild
 
 
 class FriesBot(AutoShardedBot):
     def __init__(self, **kwargs):
         from fries import (
-            CrystalBallMeow, Dice, EasyCalculator,
-            FortuneMeow, FriesSummoner, MeowTalk,
-            ResponseTemplate, SixtyJiazi, TarotMeow, WikiMan
+            CrystalBallMeow,
+            Dice,
+            EasyCalculator,
+            FortuneMeow,
+            FriesSummoner,
+            MeowTalk,
+            ResponseTemplate,
+            SixtyJiazi,
+            TarotMeow,
+            WikiMan,
         )
+
         self.dice = Dice
         self.resp_template = ResponseTemplate()
         self.meow_talk = MeowTalk()
@@ -24,39 +33,42 @@ class FriesBot(AutoShardedBot):
         self.sixty_jiazi = SixtyJiazi()
         self.crystal = CrystalBallMeow()
 
-        activity = discord.Activity(
-            name='奴僕清貓砂', type=discord.ActivityType.watching)
+        activity = discord.Activity(name="奴僕清貓砂", type=discord.ActivityType.watching)
 
         AutoShardedBot.__init__(
-            self, command_prefix='!',
-            help_command=None, activity=activity, **kwargs
+            self,
+            command_prefix="!",
+            help_command=None,
+            activity=activity,
+            debug_guilds=get_debug_guild(),
+            **kwargs,
         )
 
     async def on_message(self, msg: discord.Message):
         if msg.author == self.user:
             return
 
-        if msg.content.startswith('！'):
-            msg.content = '!' + msg.content[1:]
+        if msg.content.startswith("！"):
+            msg.content = "!" + msg.content[1:]
 
-        if msg.content.startswith('!'):
-            log_type = 'msglog'
+        if msg.content.startswith("!"):
+            log_type = "msglog"
             if msg.guild is None:
-                log_type = 'msglog2'
+                log_type = "msglog2"
             logger.info(self.resp(log_type).format(msg))
         elif self.user in msg.mentions or msg.guild is None:
-            logger.info(self.resp('msglog').format(msg))
+            logger.info(self.resp("msglog").format(msg))
             await self.chatting(msg)
 
         await AutoShardedBot.on_message(self, msg)
 
     async def on_ready(self):
-        logger.info(f'{self.user} | Ready')
+        logger.info(f"{self.user} | Ready")
 
     async def on_command_error(self, _, error):
         if isinstance(error, CommandNotFound):
             return
-        logger.info(str(error).replace('\n', ' | '))
+        logger.info(str(error).replace("\n", " | "))
 
     def resp(self, key, *args):
         return self.resp_template.get_resp(key, *args)
@@ -91,7 +103,7 @@ class FriesBot(AutoShardedBot):
     async def chatting(self, msg):
         async with msg.channel.typing():
             try:
-                emojis = '🤔😂😊🤣😍😘😁😉😎'
+                emojis = "🤔😂😊🤣😍😘😁😉😎"
                 await msg.add_reaction(random.choice(emojis))
             except:
                 pass

@@ -7,7 +7,7 @@ import hashlib
 import random
 
 import discord
-
+from discord.commands import Option
 from fries import FriesBot, exchange_name, get_token, set_logger
 
 
@@ -15,18 +15,18 @@ bot = FriesBot()
 # Commands
 
 
-@bot.slash_command(name="help", aliases=["喵"])
+@bot.slash_command(name="薯條喵喵喵", description="喵喵喵！")
 async def help(ctx):
     await ctx.respond(bot.resp("help"))
 
 
-@bot.slash_command(aliases=["哈囉"])
+@bot.slash_command(name="薯條哈囉", description="跟本喵打招呼")
 async def hello(ctx):
     await ctx.respond(bot.resp("hello", ctx.author.mention))
 
 
-@bot.slash_command(name="灑花", aliases=["撒花"])
-async def sprinkle(ctx, n: int):
+@bot.slash_command(name="薯條灑花", description="灑花！")
+async def sprinkle(ctx, n: Option(int, "想灑花的次數", name="次數", required=False, default=1)):
     n = 1 if n < 1 else n
     n = 5 if n > 5 else n
 
@@ -36,14 +36,14 @@ async def sprinkle(ctx, n: int):
     await ctx.respond(msg)
 
 
-@bot.slash_command(name="斗內", aliases=["贊助", "抖內", "donate"])
+@bot.slash_command(name="薯條斗內", description="來個贊助本喵罐罐的連結")
 async def donate(ctx):
     msgs = ["贊助我的奴僕一杯咖啡吧 ヽ(=^･ω･^=)丿", "贊助我一個貓罐頭吧 ฅ(≚ᄌ≚)"]
     url = "https://p.ecpay.com.tw/DEA19"
     await ctx.respond(f"{random.choice(msgs)}\n{url}")
 
 
-@bot.slash_command(name="粉絲", aliases=["fans", "fb", "ig"])
+@bot.slash_command(name="薯條粉絲", description="秀出本喵的粉絲團")
 async def fanpage(ctx):
     await ctx.respond(
         "薯條的臉書粉絲團\n"
@@ -56,15 +56,15 @@ async def fanpage(ctx):
 # Fries Commands
 
 
-@bot.slash_command(name="時間", aliases=["time", "薯條時間"])
+@bot.slash_command(name="薯條時間", description="顯示 GMT+8 時間")
 async def time(ctx):
     ts = dt.datetime.utcnow() + dt.timedelta(hours=8)
     ts = ts.strftime("%H:%M:%S")
     await ctx.respond(f"喵喵喵，現在時間 {ts} (GMT+8)")
 
 
-@bot.slash_command(name="召喚薯條", aliases=["召喚貓貓", "召喚喵喵"])
-async def summon(ctx, n=1):
+@bot.slash_command(name="召喚薯條", description="獲得本喵的美照一張")
+async def summon(ctx, n: Option(int, "美照的數量", name="數量", required=False, default=1)):
     n = int(n)
     n = 1 if n < 1 else n
 
@@ -89,9 +89,9 @@ async def summon(ctx, n=1):
     await _send()
 
 
-@bot.slash_command(aliases=["維基"])
-async def wiki(ctx, *args):
-    msgs = bot.get_wiki(*args)
+@bot.slash_command(name="薯條維基", description="搜尋中文維基頁面")
+async def wiki(ctx, query: Option(str, "想要搜尋的頁面名稱", name="搜尋目標", required=True)):
+    msgs = bot.get_wiki(query)
     for msg in msgs:
         await ctx.respond(msg)
 
@@ -99,14 +99,18 @@ async def wiki(ctx, *args):
 # TRPG Commands
 
 
-@bot.slash_command(aliases=["擲骰子"])
-async def dice(ctx, dice="", name=None):
+@bot.slash_command(name="薯條擲骰子", description="讓本喵來幫你擲個骰子")
+async def dice(
+    ctx,
+    dice: Option(str, "骰子的格式，決定骰子的面數與個數", name="格式", required=True),
+    name: Option(str, "任務名稱", name="任務", required=False),
+):
     msg = f"{ctx.author.mention} {bot.roll_dice(dice, name)}"
     await ctx.respond(msg)
 
 
-@bot.slash_command(aliases=["薯條算數", "薯條算術"])
-async def calc(ctx, pattern: str):
+@bot.slash_command(name="薯條算術", description="讓本喵來幫你做個簡單運算")
+async def calc(ctx, pattern: Option(str, "想要讓本喵幫你計算的數學式", name="算式", required=True)):
     msg = bot.do_calc(pattern)
     await ctx.respond(msg)
 
@@ -114,8 +118,10 @@ async def calc(ctx, pattern: str):
 # Fortune Commands
 
 
-@bot.slash_command(name="薯條水晶球", aliases=["貓貓水晶球", "喵喵水晶球", "crystal_ball"])
-async def crystal_ball(ctx, wish: str = ""):
+@bot.slash_command(name="薯條水晶球", description="讓本喵幫你看看薯條水晶球")
+async def crystal_ball(
+    ctx, wish: Option(str, "你的願望是什麼？讓本喵幫你看看吧！", name="願望", required=False)
+):
     wish = exchange_name(wish)
     sent = f"{ctx.author.mention} 讓本喵來幫你看看{wish}"
     msg = await ctx.respond(sent)
@@ -133,8 +139,8 @@ async def crystal_ball(ctx, wish: str = ""):
     await msg.edit_original_message(content=sent)
 
 
-@bot.slash_command(name="薯條抽籤", aliases=["貓貓抽籤", "喵喵抽籤", "draw"])
-async def draw(ctx, wish: str = None):
+@bot.slash_command(name="薯條抽籤", description="讓本喵來幫你抽根簡單的籤")
+async def draw(ctx, wish: Option(str, "你想要占卜的目標是什麼？", name="目標", required=False)):
     draw_name = ["大吉", "吉", "小吉", "小兇", "兇", "大凶"]
 
     if not wish:
@@ -149,19 +155,23 @@ async def draw(ctx, wish: str = None):
     await ctx.respond(f"{ctx.author.mention} 抽到了「{r}」！")
 
 
-@bot.slash_command(name="薯條籤筒", aliases=["貓貓籤筒", "喵喵籤筒", "薯條籤桶", "貓貓籤桶", "喵喵籤桶"])
-async def fortune(ctx):
+@bot.slash_command(name="薯條籤筒", description="讓本喵來幫你抽根淺草籤")
+async def fortune(ctx, _: Option(str, "來個淺草籤幫你的未來祈願吧～", name="祈願", required=False)):
     msg = bot.resp("fortune", ctx.author.mention, bot.get_fortune())
     await ctx.respond(msg)
 
 
-@bot.slash_command(name="薯條甲子籤", aliases=["貓貓甲子籤", "喵喵甲子籤"])
-async def sixty_jiazi(ctx):
+@bot.slash_command(name="薯條甲子籤", description="讓本喵幫你抽一張六十甲子籤")
+async def sixty_jiazi(ctx, _: Option(str, "人定勝天，路是自己走出來的", name="命運", required=False)):
     await ctx.respond(bot.get_sixty_jiazi())
 
 
-@bot.slash_command(name="薯條塔羅", aliases=["貓貓塔羅", "喵喵塔羅"])
-async def tarot(ctx, n: int = 1, wish: str = None):
+@bot.slash_command(name="薯條塔羅", description="讓本喵來幫你抽張塔羅牌")
+async def tarot(
+    ctx,
+    n: Option(int, "想要抽的塔羅牌數量", name="牌數", required=False, default=1),
+    wish: Option(str, "讓本喵為你的夢想抽張塔羅牌吧！", name="夢想", required=False),
+):
     send = ctx.respond
     mention = ctx.author.mention
 
@@ -181,8 +191,8 @@ async def tarot(ctx, n: int = 1, wish: str = None):
         await send(msg, file=discord.File(path))
 
 
-@bot.slash_command(name="薯條解牌", aliases=["貓貓解牌", "喵喵解牌"])
-async def tarot_query(ctx, query: str):
+@bot.slash_command(name="薯條解牌", description="查詢特定塔羅牌")
+async def tarot_query(ctx, query: Option(str, "想要解牌的塔羅牌名稱", name="牌名", required=True)):
     msg, path = bot.query_card(query)
     if path:
         await ctx.respond(msg, file=discord.File(path))
