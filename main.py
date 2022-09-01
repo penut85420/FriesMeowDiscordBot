@@ -120,7 +120,8 @@ async def calc(ctx, pattern: Option(str, "想要讓本喵幫你計算的數學�
 
 @bot.slash_command(name="薯條水晶球", description="讓本喵幫你看看薯條水晶球")
 async def crystal_ball(
-    ctx, wish: Option(str, "你的願望是什麼？讓本喵幫你看看吧！", name="願望", required=False)
+    ctx,
+    wish: Option(str, "你的願望是什麼？讓本喵幫你看看吧！", name="願望", required=False, default=""),
 ):
     wish = exchange_name(wish)
     sent = f"{ctx.author.mention} 讓本喵來幫你看看{wish}"
@@ -145,14 +146,14 @@ async def draw(ctx, wish: Option(str, "你想要占卜的目標是什麼？", na
 
     if not wish:
         r = random.choice(draw_name)
+        await ctx.respond(f"{ctx.author.mention} 抽到了「{r}」！")
     else:
         ts = dt.datetime.now().strftime("%Y%m%d")
         ss = f"{wish}{ctx.author.id}{ts}"
         m = hashlib.sha384(ss.encode()).hexdigest()
         r = sum([ord(ch) for ch in m]) % len(draw_name)
         r = draw_name[r]
-
-    await ctx.respond(f"{ctx.author.mention} 抽到了「{r}」！")
+        await ctx.respond(f"{ctx.author.mention} 的「{wish}」抽到了「{r}」！")
 
 
 @bot.slash_command(name="薯條籤筒", description="讓本喵來幫你抽根淺草籤")
