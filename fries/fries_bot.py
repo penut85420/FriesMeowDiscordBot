@@ -33,7 +33,10 @@ class FriesBot(AutoShardedBot):
         self.sixty_jiazi = SixtyJiazi()
         self.crystal = CrystalBallMeow()
 
-        activity = discord.Activity(name="奴僕清貓砂", type=discord.ActivityType.watching)
+        activity = discord.Activity(
+            name="/薯條喵喵喵",
+            type=discord.ActivityType.playing,
+        )
 
         AutoShardedBot.__init__(
             self,
@@ -56,6 +59,8 @@ class FriesBot(AutoShardedBot):
             if msg.guild is None:
                 log_type = "msglog2"
             logger.info(self.resp(log_type).format(msg))
+            if "薯條" in msg.content:
+                await msg.channel.send("現在改為斜線指令囉！請輸入 /薯條喵喵喵 獲得更多資訊")
         elif self.user in msg.mentions or msg.guild is None:
             logger.info(self.resp("msglog").format(msg))
             await self.chatting(msg)
@@ -108,4 +113,4 @@ class FriesBot(AutoShardedBot):
             except:
                 pass
             await asyncio.sleep(0.5)
-        await msg.channel.send(self.meow_talk.get_sent())
+        await msg.channel.send(self.meow_talk.get_sent() + "\n現在改為斜線指令囉！")
