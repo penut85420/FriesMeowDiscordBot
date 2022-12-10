@@ -23,7 +23,7 @@ def set_logger():
     )
 
 
-def load_config():
+def load_config() -> dict:
     return load_json(CONFIG_PATH)
 
 
@@ -74,3 +74,8 @@ def get_token():
 def get_debug_guild():
     config = load_config()
     return config.get("debug_guild", list())
+
+
+def get_chatgpt_config() -> dict:
+    config = load_config()
+    return config["chatgpt"]

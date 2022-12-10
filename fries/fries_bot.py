@@ -1,10 +1,14 @@
 import asyncio
 import random
+from threading import Lock
 
 import discord
-from discord.ext.commands import CommandNotFound, AutoShardedBot
+from discord.ext.commands import AutoShardedBot, CommandNotFound
 from loguru import logger
-from .utils import get_debug_guild
+from opencc import OpenCC
+from revChatGPT.revChatGPT import Chatbot
+
+from .utils import get_debug_guild, get_chatgpt_config
 
 
 class FriesBot(AutoShardedBot):
@@ -22,6 +26,8 @@ class FriesBot(AutoShardedBot):
             WikiMan,
         )
 
+        self.mutex_lock = Lock()
+        self.gpt_using = False
         self.dice = Dice
         self.resp_template = ResponseTemplate()
         self.meow_talk = MeowTalk()
@@ -32,6 +38,13 @@ class FriesBot(AutoShardedBot):
         self.wiki = WikiMan()
         self.sixty_jiazi = SixtyJiazi()
         self.crystal = CrystalBallMeow()
+
+        chatgpt_config = get_chatgpt_config()
+        self.chatbot = Chatbot(chatgpt_config, conversation_id=None)
+        self.chatbot.refresh_session()
+        self.cc_conv = OpenCC("s2t")
+        self.delim = chatgpt_config["delim"]
+        self.target_channels = chatgpt_config["target_channel"]
 
         activity = discord.Activity(
             name="/薯條喵喵喵",
@@ -46,6 +59,30 @@ class FriesBot(AutoShardedBot):
             debug_guilds=get_debug_guild(),
             **kwargs,
         )
+
+    def is_using(self):
+        with self.mutex_lock:
+            return self.gpt_using
+
+    def toggle_using(self, b: bool):
+        with self.mutex_lock:
+            self.gpt_using = b
+
+    def is_need_break(self, msg: str):
+        for d in self.delim:
+            if msg.endswith(d):
+                return True
+
+        return False
+
+    def get_chatgpt_response(self, prompt: str):
+        for resp in self.chatbot.get_chat_response(prompt, output="stream"):
+            resp_msg: str = self.cc_conv.convert(resp["message"])
+            resp_msg = resp_msg.replace("\n\n", "\n")
+            resp_msg = resp_msg.replace("。喵喵", "，喵喵")
+            if self.is_need_break(resp_msg):
+                yield resp_msg
+        yield resp_msg
 
     async def on_message(self, msg: discord.Message):
         if msg.author == self.user:
@@ -86,6 +123,9 @@ class FriesBot(AutoShardedBot):
 
     def get_tarots(self, n):
         return self.tarot_meow.get_tarots(n)
+
+    def get_gpt_tarots(self, problem):
+        return self.tarot_meow.get_gpt_tarot(problem)
 
     def query_card(self, query):
         return self.tarot_meow.query_card(query)
