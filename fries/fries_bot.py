@@ -77,7 +77,7 @@ class FriesBot(AutoShardedBot):
 
     def get_chatgpt_response(self, prompt: str):
         prev_msg, resp_msg = str(), str()
-        while not resp_msg.endswith("喵喵解牌完畢！"):
+        while "喵喵解牌完畢！" not in resp_msg:
             logger.info(f"Receive Prompt: {prompt}")
             for resp in self.chatbot.get_chat_response(prompt, output="stream"):
                 resp_msg: str = self._preprocess_msg(resp["message"])
@@ -92,6 +92,7 @@ class FriesBot(AutoShardedBot):
     def _preprocess_msg(self, msg: str) -> str:
         msg: str = self.cc_conv.convert(msg)
         msg = msg.replace("\n\n", "\n")
+        msg = msg.strip("「」")
         msg = msg.replace("。喵喵", "，喵喵")
         msg = msg.replace("纔能", "才能")
         return msg
