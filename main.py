@@ -236,7 +236,7 @@ async def super_tarot(
 
     prompt, card_name, img_path = bot.get_gpt_tarots(problem)
     if ctx.channel_id not in bot.target_channels:
-        await ctx.respond("「超級薯條塔羅」為體驗版功能，請到薯條喵喵喵的群組使用！\nhttps://discord.gg/HyQEypc")
+        await ctx.respond("「超級薯條塔羅」目前為體驗版功能，請到薯條喵喵喵群組裡的 #薯條實驗 頻道使用！\nhttps://discord.gg/HyQEypc")
         return
 
     # Process Prompts
