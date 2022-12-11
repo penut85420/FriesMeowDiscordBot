@@ -88,6 +88,7 @@ class FriesBot(AutoShardedBot):
         yield prev_msg
         logger.info(f"Final Output: {prev_msg}")
         self.chatbot.reset_chat()
+        self.chatbot.refresh_session()
 
     def _preprocess_msg(self, msg: str) -> str:
         msg: str = self.cc_conv.convert(msg)
