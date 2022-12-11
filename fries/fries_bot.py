@@ -76,14 +76,25 @@ class FriesBot(AutoShardedBot):
         return False
 
     def get_chatgpt_response(self, prompt: str):
-        for resp in self.chatbot.get_chat_response(prompt, output="stream"):
-            resp_msg: str = self.cc_conv.convert(resp["message"])
-            resp_msg = resp_msg.replace("\n\n", "\n")
-            resp_msg = resp_msg.replace("。喵喵", "，喵喵")
-            if self.is_need_break(resp_msg):
-                yield resp_msg
-        yield resp_msg
+        prev_msg, resp_msg = str(), str()
+        while not resp_msg.endswith("喵喵解牌完畢！"):
+            logger.info(f"Receive Prompt: {prompt}")
+            for resp in self.chatbot.get_chat_response(prompt, output="stream"):
+                resp_msg: str = self._preprocess_msg(resp["message"])
+                if self.is_need_break(resp_msg):
+                    yield prev_msg + resp_msg
+            prev_msg = prev_msg + resp_msg
+            prompt = resp_msg[-10:]
+        yield prev_msg
+        logger.info(f"Final Output: {prev_msg}")
         self.chatbot.reset_chat()
+
+    def _preprocess_msg(self, msg: str) -> str:
+        msg: str = self.cc_conv.convert(msg)
+        msg = msg.replace("\n\n", "\n")
+        msg = msg.replace("。喵喵", "，喵喵")
+        msg = msg.replace("纔能", "才能")
+        return msg
 
     async def on_message(self, msg: discord.Message):
         if msg.author == self.user:
