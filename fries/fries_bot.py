@@ -83,6 +83,7 @@ class FriesBot(AutoShardedBot):
             if self.is_need_break(resp_msg):
                 yield resp_msg
         yield resp_msg
+        self.chatbot.reset_chat()
 
     async def on_message(self, msg: discord.Message):
         if msg.author == self.user:
