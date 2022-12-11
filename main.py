@@ -236,7 +236,9 @@ async def super_tarot(
 
     prompt, card_name, img_path = bot.get_gpt_tarots(problem)
     if ctx.channel_id not in bot.target_channels:
-        await ctx.respond("「超級薯條塔羅」目前為體驗版功能，請到薯條喵喵喵群組裡的 #薯條實驗 頻道使用！\nhttps://discord.gg/HyQEypc")
+        await ctx.respond(
+            "「超級薯條塔羅」目前為體驗版功能，請到薯條喵喵喵群組裡的 #薯條實驗 頻道使用！\nhttps://discord.gg/HyQEypc"
+        )
         return
 
     # Process Prompts
@@ -260,7 +262,9 @@ async def super_tarot(
                 await msg.edit_original_response(content=resp_msg)
         except Exception as e:
             print(f"Error: {e}")
-            await msg.edit_original_response(content=f"{resp_msg} ... 發生錯誤，請稍後嘗試")
+            await msg.edit_original_response(
+                content=f"{head_msg}{resp_msg} ... 發生錯誤，請稍後嘗試"
+            )
         finally:
             bot.toggle_using(False)
 
