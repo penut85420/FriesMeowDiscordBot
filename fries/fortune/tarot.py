@@ -34,7 +34,7 @@ class TarotMeow:
         related = related.strip("。")
         card_name = STR_REVERSED[r] + tarot["name"]
 
-        full_prompt = f"{self.prompt}\n\n問題：{problem}\n塔羅牌：{card_name}\n相關詞：{related}\n"
+        full_prompt = f"{self.prompt}\n\n問題：{problem}\n塔羅牌：{card_name}\n相關詞：{related}\n答案："
 
         return full_prompt, card_name, img_path
 

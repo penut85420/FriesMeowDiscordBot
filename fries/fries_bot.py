@@ -3,12 +3,12 @@ import random
 from threading import Lock
 
 import discord
+import openai
 from discord.ext.commands import AutoShardedBot, CommandNotFound
 from loguru import logger
 from opencc import OpenCC
-from revChatGPT.revChatGPT import Chatbot
 
-from .utils import get_debug_guild, get_chatgpt_config
+from .utils import get_chatgpt_config, get_debug_guild
 
 
 class FriesBot(AutoShardedBot):
@@ -40,8 +40,8 @@ class FriesBot(AutoShardedBot):
         self.crystal = CrystalBallMeow()
 
         chatgpt_config = get_chatgpt_config()
-        self.chatbot = Chatbot(chatgpt_config, conversation_id=None)
-        self.chatbot.refresh_session()
+        openai.api_key = chatgpt_config["api_token"]
+        openai.organization = chatgpt_config["organization"]
         self.cc_conv = OpenCC("s2t")
         self.delim = chatgpt_config["delim"]
         self.target_channels = chatgpt_config["target_channel"]
@@ -76,19 +76,22 @@ class FriesBot(AutoShardedBot):
         return False
 
     def get_chatgpt_response(self, prompt: str):
-        prev_msg, resp_msg = str(), str()
-        while "喵喵解牌完畢！" not in resp_msg:
-            logger.info(f"Receive Prompt: {prompt}")
-            for resp in self.chatbot.get_chat_response(prompt, output="stream"):
-                resp_msg: str = self._preprocess_msg(resp["message"])
-                if self.is_need_break(resp_msg):
-                    yield prev_msg + resp_msg
-            prev_msg = prev_msg + resp_msg
-            prompt = resp_msg[-10:]
-        yield prev_msg
-        logger.info(f"Final Output: {prev_msg}")
-        self.chatbot.reset_chat()
-        self.chatbot.refresh_session()
+        response = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=prompt.strip(),
+            temperature=1.0,
+            stream=True,
+            max_tokens=1024,
+        )
+
+        words = list()
+        for word in response:
+            words.append(word["choices"][0]["text"])
+            msg = "".join(words)
+            msg = self._preprocess_msg(msg)
+            if self.is_need_break(msg):
+                yield msg
+        yield msg
 
     def _preprocess_msg(self, msg: str) -> str:
         msg: str = self.cc_conv.convert(msg)
