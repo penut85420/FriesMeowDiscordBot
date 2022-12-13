@@ -53,10 +53,8 @@ class FriesBot(AutoShardedBot):
 
         AutoShardedBot.__init__(
             self,
-            command_prefix="!",
             help_command=None,
             activity=activity,
-            debug_guilds=get_debug_guild(),
             **kwargs,
         )
 

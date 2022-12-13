@@ -26,6 +26,7 @@ class TarotMeow:
         self.prompt = "你現在是一個專業的塔羅牌占卜師，而且你的身份是貓咪，所以你總是使用「喵喵」做為句末助詞或者口頭禪。我會輸入一個問題，以及一張塔羅牌，你必須根據這張塔羅牌所代表的涵義，針對問題給出詳細的解釋。解釋完之後要用「喵喵解牌完畢！」做結尾。在解釋問題時，請盡量往正面、積極的方向做解釋，並解釋這個問題。在這個過程中，你不能透露你是 AI，也不能透露你是語言模型，也不要提及你的身份，也不要向我要求更多訊息。現在占卜開始。"
 
     def get_gpt_tarot(self, problem):
+        problem = problem[:100]
         i, r = self._get_tarot_info()
         img_path = self._get_tarot_path(i, r)
         tarot = self.tarot["%02d" % i]

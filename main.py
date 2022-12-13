@@ -142,15 +142,15 @@ async def crystal_ball(
 
     await asyncio.sleep(1)
     sent = f"{sent}\n喵喵喵，召喚水晶球 :crystal_ball:！"
-    await msg.edit_original_message(content=sent)
+    await msg.edit_original_response(content=sent)
 
     await asyncio.sleep(1)
     sent = f"{sent}\n本喵從水晶球裡看到了，"
-    await msg.edit_original_message(content=sent)
+    await msg.edit_original_response(content=sent)
 
     await asyncio.sleep(1)
     sent = f"{sent}是「:{bot.get_crystal()}:」！"
-    await msg.edit_original_message(content=sent)
+    await msg.edit_original_response(content=sent)
 
 
 @bot.slash_command(name="薯條抽籤", description="讓本喵來幫你抽根簡單的籤")
@@ -211,6 +211,11 @@ async def tarot(
 
     for msg, path in bot.get_tarots(n):
         await send(msg, file=discord.File(path))
+
+    if random.randint(0, 10) == 1:
+        await send(
+            "喜歡薯條塔羅嗎？歡迎到薯條喵喵喵群組裡的 #薯條實驗 頻道體驗新的指令「超級薯條塔羅」！ https://discord.gg/HyQEypc"
+        )
 
 
 @bot.slash_command(name="薯條解牌", description="查詢特定塔羅牌")
