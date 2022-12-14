@@ -8,7 +8,7 @@ from discord.ext.commands import AutoShardedBot, CommandNotFound
 from loguru import logger
 from opencc import OpenCC
 
-from .utils import get_chatgpt_config, get_debug_guild
+from .utils import get_chatgpt_config
 
 
 class FriesBot(AutoShardedBot):
@@ -73,11 +73,11 @@ class FriesBot(AutoShardedBot):
 
         return False
 
-    def get_chatgpt_response(self, prompt: str):
+    def get_gpt_response(self, prompt: str):
         response = openai.Completion.create(
             engine="text-davinci-003",
             prompt=prompt.strip(),
-            temperature=1.0,
+            temperature=0.87,
             stream=True,
             max_tokens=1024,
         )
@@ -89,15 +89,15 @@ class FriesBot(AutoShardedBot):
             msg = self._preprocess_msg(msg)
             if self.is_need_break(msg):
                 yield msg
-        yield msg
+
+        yield msg + "\n\n喜歡這則解牌的話，請幫本喵按個 😘"
 
     def _preprocess_msg(self, msg: str) -> str:
         msg: str = self.cc_conv.convert(msg)
-        msg = msg.replace("\n\n", "\n")
         msg = msg.strip("「」")
         msg = msg.replace("。喵喵", "，喵喵")
         msg = msg.replace("纔能", "才能")
-        return msg
+        return msg.strip()
 
     async def on_message(self, msg: discord.Message):
         if msg.author == self.user:
@@ -140,7 +140,7 @@ class FriesBot(AutoShardedBot):
         return self.tarot_meow.get_tarots(n)
 
     def get_gpt_tarots(self, problem):
-        return self.tarot_meow.get_gpt_tarot(problem)
+        return self.tarot_meow.get_gpt_prompt(problem)
 
     def query_card(self, query):
         return self.tarot_meow.query_card(query)

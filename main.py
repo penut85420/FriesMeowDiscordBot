@@ -204,9 +204,9 @@ async def tarot(
 
     if wish is not None:
         wish = exchange_name(wish)
-        msg = f"{mention} 讓本喵來占卜看看 {wish} ლ(́◕◞౪◟◕‵ლ)"
+        msg = f"{mention} 讓本喵來占卜看看 {wish} (≧◡≦)"
     else:
-        msg = f"{mention} 讓本喵來幫你抽個 ლ(́◕◞౪◟◕‵ლ)"
+        msg = f"{mention} 讓本喵來幫你抽個 (≧◡≦)"
     await send(msg)
 
     for msg, path in bot.get_tarots(n):
@@ -214,7 +214,8 @@ async def tarot(
 
     if random.randint(0, 10) == 1:
         await send(
-            "喜歡薯條塔羅嗎？歡迎到薯條喵喵喵群組裡的 #薯條實驗 頻道體驗新的指令「超級薯條塔羅」！ https://discord.gg/HyQEypc"
+            "喜歡薯條塔羅嗎？歡迎到薯條喵喵喵群組裡的 #薯條實驗 頻道體驗新的指令「超級薯條塔羅」！ "
+            "https://discord.gg/2CftfWC3Te"
         )
 
 
@@ -237,12 +238,12 @@ async def super_tarot(
 ):
     wish = exchange_name(problem)
     mention = ctx.author.mention
-    wish_msg = f"{mention} 讓本喵來占卜看看「{wish}」 ლ(́◕◞౪◟◕‵ლ)"
+    wish_msg = f"{mention} 讓本喵來占卜看看「{wish}」 (≧◡≦)"
 
     prompt, card_name, img_path = bot.get_gpt_tarots(problem)
     if ctx.channel_id not in bot.target_channels:
         await ctx.respond(
-            "「超級薯條塔羅」目前為體驗版功能，請到薯條喵喵喵群組裡的 #薯條實驗 頻道使用！\nhttps://discord.gg/HyQEypc"
+            "「超級薯條塔羅」目前為體驗版功能，請到薯條喵喵喵群組裡的 #薯條實驗 頻道使用！ https://discord.gg/2CftfWC3Te"
         )
         return
 
@@ -262,7 +263,7 @@ async def super_tarot(
     with ctx.typing():
         try:
             # Iteration of Each Response
-            for resp_msg in bot.get_chatgpt_response(prompt):
+            for resp_msg in bot.get_gpt_response(prompt):
                 resp_msg = head_msg + resp_msg
                 await msg.edit_original_response(content=resp_msg)
         except Exception as e:
