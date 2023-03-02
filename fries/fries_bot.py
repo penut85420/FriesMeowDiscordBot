@@ -74,21 +74,22 @@ class FriesBot(AutoShardedBot):
         return False
 
     def get_gpt_response(self, prompt: str):
-        response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=prompt.strip(),
-            temperature=0.87,
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt.strip()}],
             stream=True,
-            max_tokens=1024,
         )
-
+        msg = ""
         words = list()
         for word in response:
-            words.append(word["choices"][0]["text"])
-            msg = "".join(words)
-            msg = self._preprocess_msg(msg)
-            if self.is_need_break(msg):
-                yield msg
+            try:
+                words.append(word["choices"][0]["delta"]["content"])
+                msg = "".join(words)
+                msg = self._preprocess_msg(msg)
+                if self.is_need_break(msg):
+                    yield msg
+            except:
+                pass
 
         yield msg + "\n\n喜歡這則解牌的話，請幫本喵按個 😘"
 

@@ -8,6 +8,7 @@ loguru = "*"
 opencc = "*"
 py-cord = "*"
 requests = "*"
+openai = "*"
 
 [dev-packages]
 black = "*"

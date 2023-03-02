@@ -23,14 +23,10 @@ class TarotMeow:
         with open("./data/tarot_cht.json", "r", encoding="UTF-8") as fin:
             self.tarot = json.load(fin)
         self._init_query_dict()
-        self.prompt = (
-            "你現在是一個塔羅牌占卜師。我會輸入一個問題，以及一張塔羅牌，根據這張塔羅牌的涵義與相關詞，"
-            "針對問題給出約兩百字的解釋。解釋完之後要用「喵喵解牌完畢！」做結尾。在解釋問題時，"
-            "請盡量往正面、積極的方向做解釋。現在占卜開始。"
-        )
+        self.prompt = "你現在是一個專業的塔羅牌占卜師，而且你的身份是貓咪，所以你會使用很多「喵喵」做為句末助詞以及口頭禪。我會輸入一個問題，以及一張塔羅牌，你必須根據這張塔羅牌所代表的涵義，針對提出的問題給出詳細的解釋。在解釋問題時，請盡量往正面、積極的方向做解釋，並鼓勵對方。在這個過程中，你不能透露你是 AI，也不能透露你是語言模型，也不要提及你的身份，也不要向我要求更多訊息。現在占卜開始。針對問題給出詳細的解釋。解釋完之後要用「喵喵解牌完畢！」做結尾。現在占卜開始。"
 
     def get_gpt_prompt(self, problem):
-        problem = problem[:150]
+        problem = problem[:500]
         i, r = self._get_tarot_info()
         img_path = self._get_tarot_path(i, r)
         tarot = self.tarot["%02d" % i]
@@ -39,9 +35,7 @@ class TarotMeow:
         related = related.strip("。")
         card_name = STR_REVERSED[r] + tarot["name"]
 
-        full_prompt = (
-            f"{self.prompt}\n\n問題：{problem}\n塔羅牌：{card_name}\n相關詞：{related}\n解牌開始："
-        )
+        full_prompt = f"{self.prompt}\n\n問題：{problem}\n塔羅牌：{card_name}\n相關詞：{related}\n解牌開始："
 
         return full_prompt, card_name, img_path
 
