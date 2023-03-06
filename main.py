@@ -15,6 +15,7 @@ from fries import FriesBot, exchange_name, get_token, set_logger
 
 bot = FriesBot()
 
+
 # Commands
 @bot.slash_command(name="薯條喵喵喵", description="喵喵喵！")
 async def help(ctx: ApplicationContext):
@@ -134,7 +135,9 @@ async def calc(
 @bot.slash_command(name="薯條水晶球", description="讓本喵幫你看看薯條水晶球")
 async def crystal_ball(
     ctx: ApplicationContext,
-    wish: Option(str, "你的願望是什麼？讓本喵幫你看看吧！", name="願望", required=False, default=""),
+    wish: Option(
+        str, "你的願望是什麼？讓本喵幫你看看吧！", name="願望", required=False, default=""
+    ),
 ):
     wish = exchange_name(wish)
     sent = f"{ctx.author.mention} 讓本喵來幫你看看{wish}"
@@ -183,7 +186,8 @@ async def fortune(
 
 @bot.slash_command(name="薯條甲子籤", description="讓本喵幫你抽一張六十甲子籤")
 async def sixty_jiazi(
-    ctx: ApplicationContext, _: Option(str, "人定勝天，路是自己走出來的", name="命運", required=False)
+    ctx: ApplicationContext,
+    _: Option(str, "人定勝天，路是自己走出來的", name="命運", required=False),
 ):
     await ctx.respond(bot.get_sixty_jiazi())
 
@@ -247,12 +251,6 @@ async def super_tarot(
         )
         return
 
-    # Process Prompts
-    if bot.is_using():
-        await ctx.respond(f"{mention} 請等候其他人使用結束")
-        return
-
-    bot.toggle_using(True)
     resp_msg = ""
     head_msg = f"{wish_msg}\n本喵幫你抽到的塔羅牌為：{card_name}\n\n"
     wait_msg = "（等待薯條貓神解牌中 ...）"
@@ -271,8 +269,6 @@ async def super_tarot(
             await msg.edit_original_response(
                 content=f"{head_msg}{resp_msg} ... 發生錯誤，請稍後嘗試"
             )
-        finally:
-            bot.toggle_using(False)
 
     msg: InteractionMessage = await msg.original_response()
     await msg.add_reaction("😘")

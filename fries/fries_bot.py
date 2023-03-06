@@ -26,8 +26,6 @@ class FriesBot(AutoShardedBot):
             WikiMan,
         )
 
-        self.mutex_lock = Lock()
-        self.gpt_using = False
         self.dice = Dice
         self.resp_template = ResponseTemplate()
         self.meow_talk = MeowTalk()
@@ -57,14 +55,6 @@ class FriesBot(AutoShardedBot):
             activity=activity,
             **kwargs,
         )
-
-    def is_using(self):
-        with self.mutex_lock:
-            return self.gpt_using
-
-    def toggle_using(self, b: bool):
-        with self.mutex_lock:
-            self.gpt_using = b
 
     def is_need_break(self, msg: str):
         for d in self.delim:
