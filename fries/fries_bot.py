@@ -84,7 +84,6 @@ class FriesBot(AutoShardedBot):
         yield msg + "\n\n喜歡這則解牌的話，請幫本喵按個 😘"
 
     def _preprocess_msg(self, msg: str) -> str:
-        msg: str = self.cc_conv.convert(msg)
         msg = msg.strip("「」")
         msg = msg.replace("。喵喵", "，喵喵")
         msg = msg.replace("纔能", "才能")
