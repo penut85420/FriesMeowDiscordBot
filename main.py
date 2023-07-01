@@ -7,9 +7,10 @@ import hashlib
 import random
 
 import discord
+from discord import Interaction, InteractionMessage
 from discord.commands import Option
 from discord.commands.context import ApplicationContext
-from discord import Interaction, InteractionMessage
+from loguru import logger
 
 from fries import FriesBot, exchange_name, get_token, set_logger
 
@@ -135,9 +136,7 @@ async def calc(
 @bot.slash_command(name="薯條水晶球", description="讓本喵幫你看看薯條水晶球")
 async def crystal_ball(
     ctx: ApplicationContext,
-    wish: Option(
-        str, "你的願望是什麼？讓本喵幫你看看吧！", name="願望", required=False, default=""
-    ),
+    wish: Option(str, "你的願望是什麼？讓本喵幫你看看吧！", name="願望", required=False, default=""),
 ):
     wish = exchange_name(wish)
     sent = f"{ctx.author.mention} 讓本喵來幫你看看{wish}"
@@ -217,10 +216,7 @@ async def tarot(
         await send(msg, file=discord.File(path))
 
     if random.randint(0, 10) == 1:
-        await send(
-            "喜歡薯條塔羅嗎？歡迎到薯條喵喵喵群組裡的 #薯條實驗 頻道體驗新的指令「超級薯條塔羅」！ "
-            "https://discord.gg/2CftfWC3Te"
-        )
+        await send("喜歡薯條塔羅嗎？歡迎體驗新的指令「`/超級薯條塔羅`」！ ")
 
 
 @bot.slash_command(name="薯條解牌", description="查詢特定塔羅牌")
@@ -245,11 +241,6 @@ async def super_tarot(
     wish_msg = f"{mention} 讓本喵來占卜看看「{wish}」 (≧◡≦)"
 
     prompt, card_name, img_path = bot.get_gpt_tarots(problem)
-    if ctx.channel_id not in bot.target_channels:
-        await ctx.respond(
-            "「超級薯條塔羅」目前為體驗版功能，請到薯條喵喵喵群組裡的 #薯條實驗 頻道使用！ https://discord.gg/2CftfWC3Te"
-        )
-        return
 
     resp_msg = ""
     head_msg = f"{wish_msg}\n本喵幫你抽到的塔羅牌為：{card_name}\n\n"
@@ -258,20 +249,29 @@ async def super_tarot(
         head_msg + wait_msg,
         file=discord.File(img_path),
     )
+
+    final_msg = None
     with ctx.typing():
         try:
             # Iteration of Each Response
             for resp_msg in bot.get_gpt_response(prompt):
                 resp_msg = head_msg + resp_msg
                 await msg.edit_original_response(content=resp_msg)
+                final_msg = resp_msg
         except Exception as e:
             print(f"Error: {e}")
-            await msg.edit_original_response(
-                content=f"{head_msg}{resp_msg} ... 發生錯誤，請稍後嘗試"
-            )
+            final_msg = f"{head_msg}{resp_msg} ... 發生錯誤，請稍後嘗試"
+            await msg.edit_original_response(content=final_msg)
+
+    logger.info(f"Problem: {problem}")
+    logger.info(f"Response: {final_msg}")
 
     msg: InteractionMessage = await msg.original_response()
-    await msg.add_reaction("😘")
+
+    try:
+        await msg.add_reaction("😘")
+    except:
+        pass
 
 
 if __name__ == "__main__":

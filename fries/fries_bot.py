@@ -1,3 +1,4 @@
+import time
 import asyncio
 import random
 from threading import Lock
@@ -42,7 +43,6 @@ class FriesBot(AutoShardedBot):
         openai.organization = chatgpt_config["organization"]
         self.cc_conv = OpenCC("s2t")
         self.delim = chatgpt_config["delim"]
-        self.target_channels = chatgpt_config["target_channel"]
 
         activity = discord.Activity(
             name="/薯條喵喵喵",
@@ -69,6 +69,7 @@ class FriesBot(AutoShardedBot):
             messages=[{"role": "user", "content": prompt.strip()}],
             stream=True,
         )
+        ts = time.perf_counter() - 1
         msg = ""
         words = list()
         for word in response:
@@ -76,8 +77,10 @@ class FriesBot(AutoShardedBot):
                 words.append(word["choices"][0]["delta"]["content"])
                 msg = "".join(words)
                 msg = self._preprocess_msg(msg)
-                if self.is_need_break(msg):
+                delta = time.perf_counter() - ts
+                if self.is_need_break(msg) and delta > 1:
                     yield msg
+                    ts = time.perf_counter()
             except:
                 pass
 
