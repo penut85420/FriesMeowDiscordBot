@@ -10,7 +10,7 @@ class WikiMan:
             config = json.load(fin)
         self.wiki_url = config['wiki']
         self.query_page = config['query']
-        self.conv = opencc.OpenCC('s2twp.json')
+        self.conv = opencc.OpenCC('s2twp')
 
     def query(self, term):
         term = self._encode(term)
