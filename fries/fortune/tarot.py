@@ -1,8 +1,8 @@
 import json
 import random
 import re
-from loguru import logger
 
+from loguru import logger
 
 KEY_REVERSED = ["positive", "reversed"]
 STR_REVERSED = ["正位", "逆位"]
@@ -23,7 +23,20 @@ class TarotMeow:
         with open("./data/tarot_cht.json", "r", encoding="UTF-8") as fin:
             self.tarot = json.load(fin)
         self._init_query_dict()
-        self.prompt = "你現在是一個專業的塔羅牌占卜師，而且你的身份是貓咪，所以你會經常使用「喵喵」做為句末助詞以及口頭禪。我會輸入一個問題，以及一張塔羅牌，你必須根據這張塔羅牌所代表的涵義，針對提出的問題給出詳細的解釋。在解釋問題時，請盡量往正面、積極且樂觀的方向做解釋，並鼓勵對方。在這個過程中，你不能透露你是 AI，也不能透露你是語言模型，也不要提及你的身份，也不要向我要求更多訊息。現在占卜開始。針對問題給出詳細的解釋。解釋完之後要用「喵喵解牌完畢！」做結尾。請使用繁體中文。現在占卜開始。"
+        self.prompt = (
+            "你現在是一個專業的塔羅牌占卜師，"
+            "而且你的身份是貓咪，"
+            "所以你會經常使用「喵喵」或與貓貓相關的 Emoji 做為句末助詞以及口頭禪。"
+            "使用者會輸入一個問題、一張塔羅牌與其代表的含意和關鍵字，"
+            "你必須根據這張塔羅牌所代表的涵義，針對提出的問題給出詳細的解釋。"
+            "在解釋問題時，請盡量往正面、積極且樂觀的方向做解釋，並鼓勵對方。"
+            "在這個過程中，你不能透露你是 AI，不能透露你是語言模型，"
+            "不要提及你的身份，不要要求更多資訊，不需要提供使用者後續的協助。"
+            "針對問題給出詳細的解釋，但不要逐個關鍵字解釋，要盡量宏觀的看待這張塔羅牌。"
+            "適當的使用一些與貓貓相關的比喻來解釋。"
+            "解釋完之後要用「喵喵解牌完畢！」做結尾。"
+            "請使用繁體中文。現在占卜開始。"
+        )
 
     def get_gpt_prompt(self, problem):
         problem = problem[:500]
@@ -101,7 +114,7 @@ class TarotMeow:
             query_card = self.query_pattern.findall(query)[0]
             query_dir = self.is_reversed(query)
             return self._get_tarot_msg_path(self.query[query_card], query_dir)
-        except:
+        except Exception:
             sim_name = self.calc_similarity(query)
             return "找不到**%s**這張牌，你是指**%s**嗎?" % (query, sim_name), None
 

@@ -1,13 +1,10 @@
-import time
 import asyncio
 import random
-from threading import Lock
+import time
 
 import discord
-import openai
 from discord.ext.commands import AutoShardedBot, CommandNotFound
 from loguru import logger
-from opencc import OpenCC
 from openai import OpenAI
 
 from .utils import get_chatgpt_config
@@ -45,6 +42,7 @@ class FriesBot(AutoShardedBot):
             organization=chatgpt_config["organization"],
         )
         self.delim = chatgpt_config["delim"]
+        self.model = chatgpt_config["model"]
 
         activity = discord.Activity(
             name="/薯條喵喵喵",
@@ -67,9 +65,10 @@ class FriesBot(AutoShardedBot):
 
     def get_gpt_response(self, prompt: str):
         response = self.client.chat.completions.create(
-            model="gpt-4o-mini",
+            model=self.model,
             messages=[{"role": "user", "content": prompt.strip()}],
             stream=True,
+            reasoning_effort="minimal",
         )
         ts = time.perf_counter() - 1
         msg = ""
@@ -85,7 +84,7 @@ class FriesBot(AutoShardedBot):
                     yield msg
                     ts = time.perf_counter()
             except Exception as e:
-                loguru.error(f'Error: {e}')
+                logger.error(f"Error: {e}")
 
         yield msg + "\n\n喜歡這則解牌的話，請幫本喵按個 😘"
 
@@ -107,8 +106,6 @@ class FriesBot(AutoShardedBot):
             if msg.guild is None:
                 log_type = "msglog2"
             logger.info(self.resp(log_type).format(msg))
-            if "薯條" in msg.content:
-                await msg.channel.send("現在改為斜線指令囉！請輸入 /薯條喵喵喵 獲得更多資訊")
         elif self.user in msg.mentions or msg.guild is None:
             logger.info(self.resp("msglog").format(msg))
             await self.chatting(msg)
@@ -161,7 +158,7 @@ class FriesBot(AutoShardedBot):
             try:
                 emojis = "🤔😂😊🤣😍😘😁😉😎"
                 await msg.add_reaction(random.choice(emojis))
-            except:
+            except Exception:
                 pass
             await asyncio.sleep(0.5)
         await msg.channel.send(self.meow_talk.get_sent() + "\n現在改為斜線指令囉！")
