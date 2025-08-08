@@ -8,6 +8,7 @@ import openai
 from discord.ext.commands import AutoShardedBot, CommandNotFound
 from loguru import logger
 from opencc import OpenCC
+from openai import OpenAI
 
 from .utils import get_chatgpt_config
 
@@ -39,9 +40,10 @@ class FriesBot(AutoShardedBot):
         self.crystal = CrystalBallMeow()
 
         chatgpt_config = get_chatgpt_config()
-        openai.api_key = chatgpt_config["api_token"]
-        openai.organization = chatgpt_config["organization"]
-        self.cc_conv = OpenCC("s2t")
+        self.client = OpenAI(
+            api_key=chatgpt_config["api_token"],
+            organization=chatgpt_config["organization"],
+        )
         self.delim = chatgpt_config["delim"]
 
         activity = discord.Activity(
@@ -64,8 +66,8 @@ class FriesBot(AutoShardedBot):
         return False
 
     def get_gpt_response(self, prompt: str):
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+        response = self.client.chat.completions.create(
+            model="gpt-4o-mini",
             messages=[{"role": "user", "content": prompt.strip()}],
             stream=True,
         )
@@ -74,15 +76,16 @@ class FriesBot(AutoShardedBot):
         words = list()
         for word in response:
             try:
-                words.append(word["choices"][0]["delta"]["content"])
+                if word.choices[0].delta.content:
+                    words.append(word.choices[0].delta.content)
                 msg = "".join(words)
                 msg = self._preprocess_msg(msg)
                 delta = time.perf_counter() - ts
                 if self.is_need_break(msg) and delta > 1:
                     yield msg
                     ts = time.perf_counter()
-            except:
-                pass
+            except Exception as e:
+                loguru.error(f'Error: {e}')
 
         yield msg + "\n\n喜歡這則解牌的話，請幫本喵按個 😘"
 
